@@ -1,37 +1,38 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class codeParser {
-Hashtable<String, String> variables=new Hashtable<>();
+Hashtable<String, String> variables;
+    public codeParser() {
+	    this.variables =new Hashtable<>();
+}
 	public void print(String arg ) {
+		if (variables.containsKey(arg)){
+			System.out.println(variables.get(arg)+"");
+		}
+		else {
 		System.out.println(arg+"");
+		  }
 	
 	}
 	public void assign(String arg1 ,String arg2){
 		if (arg2.equals("input")) {
-			System.out.println("please enter a value");
+			System.out.println("Please enter a value");
 			Scanner sc = new Scanner(System.in);
 			arg2= sc.next();
 		}
-		if (variables.containsKey(arg1)) {
-			variables.replace(arg1, arg2);
+		if (variables.containsKey(arg2)) {
+			variables.put(arg1, variables.get(arg2));
 		}
 		else {
 			variables.put(arg1, arg2);
 		}	
 	}
 	public String readFile(String arg) throws IOException {
-		File file = new File(arg);
+		String filepath;
+		if (variables.containsKey(arg))filepath=variables.get(arg);
+		else filepath=arg;
+		File file = new File(filepath);
 		Scanner sc = new Scanner(file);
 		String st = "";
 		while (sc.hasNext()) {
@@ -40,27 +41,30 @@ Hashtable<String, String> variables=new Hashtable<>();
 		}
 		return st;
 	}
-	private void writeFile(String filePath, String text) {
-        File file = new File(filePath);
-        FileWriter fr = null;
-        BufferedWriter br = null;
-        PrintWriter pr = null;
-        try {
-            // to append to file, you need to initialize FileWriter using below constructor
-            fr = new FileWriter(file, true);
-            br = new BufferedWriter(fr);
-            pr = new PrintWriter(br);
-            pr.println(text);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                pr.close();
-                br.close();
-                fr.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }S
+	public void writeFile(String arg1, String arg2) {
+		String filePath;
+		if (variables.containsKey(arg1))filePath=variables.get(arg1);
+		else filePath=arg1;
+		String text;
+		if (variables.containsKey(arg2))text=variables.get(arg2);
+		else text=arg2;
+		
+	    try (PrintWriter result = new PrintWriter(filePath)) {
+	            result.println(text);
+	        } catch (FileNotFoundException e) {
+	            e.printStackTrace();
+	        }
+    }
+	public void printFromTo(String x , String y) {
+		int firstNumber;
+		int secondNumber;
+		if(variables.containsKey(x))firstNumber=Integer.parseInt(variables.get(x));
+		else firstNumber=Integer.parseInt(x);
+		if(variables.containsKey(y))secondNumber=Integer.parseInt(variables.get(y));
+		else secondNumber=Integer.parseInt(y);	
+		for (int i = firstNumber+1 ; i<=secondNumber;i++) {
+			System.out.println(i);
+		}
+	}
+	
 }
