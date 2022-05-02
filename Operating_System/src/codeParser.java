@@ -2,7 +2,8 @@ import java.io.*;
 import java.util.*;
 
 public class codeParser {
-Hashtable<String, String> variables;
+     private Hashtable<String, String> variables;
+     
     public codeParser() {
 	    this.variables =new Hashtable<>();
 }
