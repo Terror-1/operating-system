@@ -5,38 +5,44 @@ public class interpruter {
 	int[]timeOfArrival;
 	Queue<process> readyQueue;
 	Queue<process> blockedQueue;
+	ArrayList<process> processes;
 	int timeSlice;
-	int numberOfProcesses=3; // blabizo
+	int clk;
+	int totaNumOfProcesses=3; // blabizo
 	public interpruter() {
 		this.mut = new mutexes(this.blockedQueue);
 		this.parser=new codeParser();
-		this.timeOfArrival=new int[numberOfProcesses];
+		this.timeOfArrival=new int[totaNumOfProcesses];
 		this.readyQueue = new LinkedList<>();
 		this.blockedQueue= new LinkedList<>();
+		this.processes=new ArrayList<>();
 		this.timeSlice=2;
+		this.clk=0;
 		
 	}
 	public void programToprocess(ArrayList<String> programs) {
 		for(int i=0;i<programs.size();i++) {
-			process p = new process(i+1,this.timeOfArrival[i], processStatus.READY);
-			this.readyQueue.add(p);
+			process p = new process(i,this.timeOfArrival[i], processStatus.NEW);
+			this.processes.add(p);
 			
 		}
 		this.scheduler();
 	}
-	public void executeInstruction() {
-		
+	public void checkArrival() {
+		for(int i =0 ; i <this.processes.size();i++) {
+			if (this.processes.get(i).getTimeOfArrival()==clk)this.readyQueue.add(this.processes.get(i));
+		}
 	}
 	public void scheduler() {
 		System.out.println("OS starts the scheduler");
-		while(!this.readyQueue.isEmpty()) {
-			process temp = this.readyQueue.poll();
-			System.out.println("process"+temp.getPid()+"is chosen");
-			System.out.println("process"+temp.getPid()+"is currently executing");
-			temp.setCurrentStatus(processStatus.Running);
+		checkArrival();
+		process temp = this.readyQueue.poll();
+		System.out.println("process"+temp.getPid()+"is chosen");
+		System.out.println("process"+temp.getPid()+"is currently executing");
+		temp.setCurrentStatus(processStatus.Running);
 			
 			
-		}
+		
 		
 	}
 	

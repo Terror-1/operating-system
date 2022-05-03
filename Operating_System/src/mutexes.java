@@ -33,7 +33,7 @@ public class mutexes {
 				this.generalBlocked.add(p);
 			}
 			else {
-				currentOwner[0]=p.pid;
+				currentOwner[0]=p.getPid();
 				userInput=false;
 			}
 			
@@ -45,7 +45,7 @@ public class mutexes {
 				this.generalBlocked.add(p);
 			}
 			else {
-				currentOwner[1]=p.pid;
+				currentOwner[1]=p.getPid();
 				userOutput=false;
 			}
 			
@@ -56,7 +56,7 @@ public class mutexes {
 				this.generalBlocked.add(p);
 			}
 			else {
-				currentOwner[2]=p.pid;
+				currentOwner[2]=p.getPid();
 				file=false;
 		}
 		}

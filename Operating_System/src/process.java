@@ -1,7 +1,7 @@
 public class process {
-    int pid;
-	int timeOfArrival;
-	processStatus currentStatus;
+    private int pid;
+	private int timeOfArrival;
+	private processStatus currentStatus;
 	public int getPid() {
 		return pid;
 	}

@@ -1,3 +1,3 @@
 public enum processStatus {
-	READY,Running,BLOCKED,FINISHED
+	NEW,READY,Running,BLOCKED,FINISHED
 }
