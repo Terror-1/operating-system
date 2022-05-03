@@ -1,7 +1,17 @@
+import java.util.Hashtable;
+
 public class process {
     private int pid;
 	private int timeOfArrival;
 	private processStatus currentStatus;
+	Hashtable<String, String> variables;
+	public process(int pid ,int timeOfArival, processStatus e) {
+		this.pid=pid;
+		this.timeOfArrival=timeOfArival;
+		this.currentStatus=e;
+		this.variables=new Hashtable<>();
+		
+	}
 	public int getPid() {
 		return pid;
 	}
@@ -14,12 +24,7 @@ public class process {
 	public void setTimeOfArrival(int timeOfArrival) {
 		this.timeOfArrival = timeOfArrival;
 	}
-	public process(int pid ,int timeOfArival, processStatus e) {
-		this.pid=pid;
-		this.timeOfArrival=timeOfArival;
-		this.currentStatus=e;
-		
-	}
+	
 	public processStatus getCurrentStatus() {
 		return currentStatus;
 	}
