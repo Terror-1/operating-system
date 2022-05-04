@@ -75,7 +75,7 @@ public class mutexes {
 			if(!blockedOfUserInput.isEmpty()) {
 			currentOwner[0]=blockedOfUserInput.peek().getPid();
 			RQ.add(blockedOfUserInput.peek());
-			System.out.println("process "+blockedOfUserInput.poll().getPid()+"is ready");
+			System.out.println("process "+blockedOfUserInput.poll().getPid()+"blocled queue >>> ready queue");
 			//remove from the general blocked queue
 			}
 			else userInput=true;
@@ -84,7 +84,7 @@ public class mutexes {
 			if(!blockedOfUserOutput.isEmpty()) {
 				currentOwner[1] =blockedOfUserOutput.peek().getPid();
 				RQ.add(blockedOfUserOutput.peek());
-				System.out.println("process "+blockedOfUserOutput.poll().getPid()+"is ready");
+				System.out.println("process "+blockedOfUserOutput.poll().getPid()+"blocled queue >>> ready queue");
 				
 			}
 			
@@ -94,7 +94,7 @@ public class mutexes {
 			if(!blockedOfFile.isEmpty()) {
 				currentOwner[2]=blockedOfFile.peek().getPid();
 				RQ.add(blockedOfFile.peek());
-				System.out.println("process "+blockedOfFile.poll().getPid()+"is ready");
+				System.out.println("process "+blockedOfFile.poll().getPid()+"blocled queue >>> ready queue");
 				
 			}
 			else file=true;

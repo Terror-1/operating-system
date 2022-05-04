@@ -64,18 +64,19 @@ public class interpruter {
 			if ((this.processes.get(i).getTimeOfArrival()==clk)&&(this.processes.get(i).getaddedFlag()==false)) {
 				this.readyQueue.add(this.processes.get(i));
 			this.processes.get(i).setaddedFlag(true);
-			System.out.println("process "+this.processes.get(i).getPid() + "is ready");
+			System.out.println("process "+this.processes.get(i).getPid() + "  moved to ready queue");
 			}
 		}
 	}
 	public void scheduler() throws IOException {
-		System.out.println("OS starts the scheduler");
+		System.out.println("The scheduler starts");
 		while(true) {	
+		System.out.println("The clock is : " +clk);
 	    checkArrival();
 		if(!readyQueue.isEmpty()) {
 		  process temp = this.readyQueue.poll();
-		  System.out.println("process"+" "+temp.getPid()+" is chosen");
-		  System.out.println("process"+" "+temp.getPid()+" is currently executing");
+		  System.out.println("process "+temp.getPid()+" is chosen");
+		  System.out.println("process "+temp.getPid()+" is currently executing");
 		  temp.setCurrentStatus(processStatus.Running);
 		  for(int i =0 ; (i<timeSlice) &&(!temp.finshed)&&(!temp.getCurrentStatus().equals(processStatus.BLOCKED)) ;i++) {
 			  if(temp.instructions.peek().isEmpty())
@@ -105,12 +106,18 @@ public class interpruter {
 				  this.readyQueue.add(temp);
 				  temp.setCurrentStatus(processStatus.READY);
 			  }
+			  
 		}
+		  System.out.println("---------------------------");
 		  
-		}else {
+		}
+		else {
 			 checkArrival();
 			  clk++;
+			  System.out.println("---------------------------");
+			  
 		}
+		
 		if(numOfFinshed==totaNumOfProcesses)break;
 			
 		}
