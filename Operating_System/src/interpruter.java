@@ -71,7 +71,6 @@ public class interpruter {
 	public void scheduler() throws IOException {
 		System.out.println("The scheduler starts");
 		while(true) {	
-		System.out.println("The clock is : " +clk);
 	    checkArrival();
 		if(!readyQueue.isEmpty()) {
 		  process temp = this.readyQueue.poll();
@@ -81,8 +80,6 @@ public class interpruter {
 		  for(int i =0 ; (i<timeSlice) &&(!temp.finshed)&&(!temp.getCurrentStatus().equals(processStatus.BLOCKED)) ;i++) {
 			  if(temp.instructions.peek().isEmpty())
 				  temp.instructions.poll();
-			  checkArrival();
-			  clk++;
 			  String temp1 = temp.instructions.peek().pop();
 			  if(this.ourInstruction.contains(temp.instructions.peek().peek())) {
 				  String temp2 = temp.instructions.peek().pop();
@@ -106,15 +103,16 @@ public class interpruter {
 				  this.readyQueue.add(temp);
 				  temp.setCurrentStatus(processStatus.READY);
 			  }
+			  checkArrival();
+			  clk++;
 			  
 		}
-		  System.out.println("---------------------------");
 		  
 		}
 		else {
 			 checkArrival();
 			  clk++;
-			  System.out.println("---------------------------");
+			  
 			  
 		}
 		
