@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 public class interpruter {
 	mutexes mut ;
@@ -12,9 +13,10 @@ public class interpruter {
 	int clk;
 	int totaNumOfProcesses=3; // blabizo
 	int numOfFinshed=0;
+	systemCalls tempCalls;
 	Set<String> ourInstruction = new HashSet<String>();
 	public interpruter() {
-		this.mut = new mutexes(this.blockedQueue);
+		this.tempCalls=new systemCalls(blockedQueue , readyQueue);
 		this.parser=new codeParser();
 		this.timeOfArrival=new int[totaNumOfProcesses];
 		this.readyQueue = new LinkedList<>();
@@ -47,7 +49,7 @@ public class interpruter {
 			p.instructions.add(temp);	
 		}
 	}
-	public void programToprocess(ArrayList<String> programs) throws FileNotFoundException {
+	public void programToprocess(ArrayList<String> programs) throws IOException {
 		for(int i=0;i<programs.size();i++) {
 			process p = new process(i,this.timeOfArrival[i], processStatus.NEW);
 			this.processes.add(p);
@@ -57,24 +59,57 @@ public class interpruter {
 		this.scheduler();
 	}
 	public void checkArrival() {
+		
 		for(int i =0 ; i <this.processes.size();i++) {
-			if (this.processes.get(i).getTimeOfArrival()==clk)this.readyQueue.add(this.processes.get(i));
+			if ((this.processes.get(i).getTimeOfArrival()==clk)&&(this.processes.get(i).getaddedFlag()==false)) {
+				this.readyQueue.add(this.processes.get(i));
+			this.processes.get(i).setaddedFlag(true);
+			System.out.println("process "+this.processes.get(i).getPid() + "is ready");
+			}
 		}
 	}
-	public void scheduler() {
+	public void scheduler() throws IOException {
 		System.out.println("OS starts the scheduler");
-		while(true) {
-		checkArrival();
+		while(true) {	
+	    checkArrival();
 		if(!readyQueue.isEmpty()) {
 		  process temp = this.readyQueue.poll();
 		  System.out.println("process"+" "+temp.getPid()+" is chosen");
 		  System.out.println("process"+" "+temp.getPid()+" is currently executing");
 		  temp.setCurrentStatus(processStatus.Running);
-		  for(int i =0 ; i<timeSlice ;i++) {
-		      //get next inst
-		      //execute (inst,p)
-		      clk++;
+		  for(int i =0 ; (i<timeSlice) &&(!temp.finshed)&&(!temp.getCurrentStatus().equals(processStatus.BLOCKED)) ;i++) {
+			  if(temp.instructions.peek().isEmpty())
+				  temp.instructions.poll();
+			  checkArrival();
+			  clk++;
+			  String temp1 = temp.instructions.peek().pop();
+			  if(this.ourInstruction.contains(temp.instructions.peek().peek())) {
+				  String temp2 = temp.instructions.peek().pop();
+				  if(temp2.equals("readFile"))
+					  if(!temp.instructions.peek().isEmpty())
+					  temp.instructions.peek().push(tempCalls.executeSpecialInstruction(temp2, temp1, temp));
+				  else
+				  tempCalls.executeInstruction2(temp2,temp1,temp);
+			  }else {
+				  String temp2 = temp.instructions.peek().pop();
+				  String temp3 = temp.instructions.peek().pop();
+				  tempCalls.executeInstruction3(temp3,temp2,temp1,temp);
+
+			  }
+			  if(temp.instructions.isEmpty()) {
+				  temp.finshed=true;
+				 this.numOfFinshed++;
+				 temp.setCurrentStatus(processStatus.FINISHED);
+				 
+			  }else {
+				  this.readyQueue.add(temp);
+				  temp.setCurrentStatus(processStatus.READY);
+			  }
 		}
+		  
+		}else {
+			 checkArrival();
+			  clk++;
 		}
 		if(numOfFinshed==totaNumOfProcesses)break;
 			
@@ -85,19 +120,20 @@ public class interpruter {
 	public void setTimeSlice(int timeSlice) {
 		this.timeSlice = timeSlice;
 	}
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws IOException {
 		interpruter inter = new interpruter();
 		String program1="src/Program_1.txt";
 		String program2="src/Program_2.txt";
 		String program3="src/Program_3.txt";
 		ArrayList<String> programs = new ArrayList<>();
 		inter.timeOfArrival[0]=0;
-		inter.timeOfArrival[1]=2;
+		inter.timeOfArrival[1]=1;
 		inter.timeOfArrival[2]=4;
 		programs.add(program1);
 		programs.add(program2);
 		programs.add(program3);
 		inter.programToprocess(programs);
+		//System.out.println();
 //		process p = new process(0, 0, processStatus.BLOCKED);
 //		inter.readInstructions(program3, p);
 //		int size = p.instructions.size();

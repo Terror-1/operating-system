@@ -10,8 +10,9 @@ public class mutexes {
 	private boolean file;
 	private int currentOwner[];
 	Queue<process> generalBlocked;
+	Queue<process> RQ;
 	
-	public mutexes(Queue<process> blockedQueue) {
+	public mutexes(Queue<process> blockedQueue ,Queue<process> readyQueue) {
 		this.blockedOfFile= new LinkedList<>();
 		this.blockedOfUserInput=new LinkedList<>();
 		this.blockedOfUserInput= new LinkedList<>();
@@ -19,6 +20,7 @@ public class mutexes {
 		this.userOutput=true;
 		this.file=true;
 		currentOwner= new int[3];
+		this.RQ=readyQueue;
 		//0 --> process running over userInput
 		//1 --> process running over userOutput
 		//2 -->process running over File
@@ -31,6 +33,8 @@ public class mutexes {
 			if(!userInput) {
 				blockedOfUserInput.add(p);
 				this.generalBlocked.add(p);
+				System.out.println("process "+p.getPid()+"is blocked over user Input");
+				p.setCurrentStatus(processStatus.BLOCKED);
 			}
 			else {
 				currentOwner[0]=p.getPid();
@@ -43,6 +47,9 @@ public class mutexes {
 			if(!userOutput) {
 				blockedOfUserOutput.add(p);
 				this.generalBlocked.add(p);
+				System.out.println("process "+p.getPid()+"is blocked over user output");
+				p.setCurrentStatus(processStatus.BLOCKED);
+				
 			}
 			else {
 				currentOwner[1]=p.getPid();
@@ -54,6 +61,8 @@ public class mutexes {
 			if(!file) {
 				blockedOfFile.add(p);
 				this.generalBlocked.add(p);
+				System.out.println("process "+p.getPid()+"is blocked over file");
+				p.setCurrentStatus(processStatus.BLOCKED);
 			}
 			else {
 				currentOwner[2]=p.getPid();
@@ -63,15 +72,31 @@ public class mutexes {
 	}
 	public void semSignal(String arg , int pid){
 		if(pid==currentOwner[0]&&arg.equals("userInput")) {
-			if(!blockedOfUserInput.isEmpty()) currentOwner[0]=pid;
+			if(!blockedOfUserInput.isEmpty()) {
+			currentOwner[0]=blockedOfUserInput.peek().getPid();
+			RQ.add(blockedOfUserInput.peek());
+			System.out.println("process "+blockedOfUserInput.poll().getPid()+"is ready");
+			//remove from the general blocked queue
+			}
 			else userInput=true;
 		}
 		else if(pid==currentOwner[1]&&arg.equals("userOutput")){
-			if(!blockedOfUserOutput.isEmpty()) currentOwner[1]=pid;
+			if(!blockedOfUserOutput.isEmpty()) {
+				currentOwner[1] =blockedOfUserOutput.peek().getPid();
+				RQ.add(blockedOfUserOutput.peek());
+				System.out.println("process "+blockedOfUserOutput.poll().getPid()+"is ready");
+				
+			}
+			
 			else userOutput=true;
 		}
 		else if (pid==currentOwner[2]&&arg.equals("file")) {
-			if(!blockedOfFile.isEmpty()) currentOwner[2]=pid;
+			if(!blockedOfFile.isEmpty()) {
+				currentOwner[2]=blockedOfFile.peek().getPid();
+				RQ.add(blockedOfFile.peek());
+				System.out.println("process "+blockedOfFile.poll().getPid()+"is ready");
+				
+			}
 			else file=true;
 		}
 		

@@ -4,6 +4,8 @@ public class process {
     private int pid;
 	private int timeOfArrival;
 	private processStatus currentStatus;
+	private boolean addedFlag=false;
+	boolean finshed=false;
 	Hashtable<String, String> variables;
 	Queue<Stack<String>> instructions;
 	public process(int pid ,int timeOfArival, processStatus e) {
@@ -19,6 +21,12 @@ public class process {
 	}
 	public void setPid(int pid) {
 		this.pid = pid;
+	}
+	public boolean getaddedFlag() {
+		return addedFlag;
+	}
+	public void setaddedFlag(boolean x) {
+		this.addedFlag = x;
 	}
 	public int getTimeOfArrival() {
 		return timeOfArrival;
