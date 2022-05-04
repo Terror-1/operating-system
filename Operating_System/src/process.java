@@ -16,6 +16,9 @@ public class process {
 		this.variables=new Hashtable<>();
 		
 	}
+	public String toString() {
+		return "process "+this.pid;
+	}
 	public int getPid() {
 		return pid;
 	}

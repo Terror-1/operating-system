@@ -17,22 +17,43 @@ public class systemCalls {
 	
   public void executeInstruction2(String arg1,String arg2,process p) {
 	  switch(arg1) {
-	  case "print":  cp.print(arg2, p);break;
-	  case "semWait": mutex.semWait(arg2, p);break;
-	  case "semSignal" : mutex.semSignal(arg2, p.getPid());break;
+	  case "print":  {
+		  System.out.println("process "+p.getPid()+" is performing a printing instruction of "+arg2);
+		  cp.print(arg2, p);
+		  break;}
+	  case "semWait": {
+		  System.out.println("process "+p.getPid()+" is performing a semWait instruction over "+arg2 );
+		  mutex.semWait(arg2, p);
+		  break;}
+	  case "semSignal" :{ 
+		  System.out.println("process "+p.getPid()+" is performing a semSignal instruction over "+arg2 );
+		  mutex.semSignal(arg2, p.getPid());
+		  break;}
 	  default :break;
 	  } 
   }
   public void executeInstruction3(String arg1,String arg2,String arg3,process p) {
 	  switch(arg1) {
-	  case "assign" : cp.assign(arg2, arg3, p);break;
-	  case "writeFile" : cp.writeFile(arg2, arg3, p);break;
-	  case "printFromTo" : cp.printFromTo(arg2, arg3, p);break;
+	  case "assign" : {
+		  System.out.println("process "+p.getPid()+" is performing an assign instruction"  );
+		  cp.assign(arg2, arg3, p);
+		  break;}
+	  case "writeFile" : {
+	  System.out.println("process "+p.getPid()+" is performing a writeFile instruction ");
+	  cp.writeFile(arg2, arg3, p);
+	  break;
+	  }
+	  
+	  case "printFromTo" : {
+	  System.out.println("process "+p.getPid()+" is printing from "+ arg2 +"to"+arg1 );
+	  cp.printFromTo(arg2, arg3, p);
+	  break;}
 	  default : break;
 	  }
 	    
   }
   public String executeSpecialInstruction(String arg1,String arg2,process p) throws IOException {
+	 System.out.println("process "+p.getPid()+" reading file "+arg2 );
 	 return cp.readFile(arg2, p);
   }
 }

@@ -64,17 +64,19 @@ public class interpruter {
 			if ((this.processes.get(i).getTimeOfArrival()==clk)&&(this.processes.get(i).getaddedFlag()==false)) {
 				this.readyQueue.add(this.processes.get(i));
 			this.processes.get(i).setaddedFlag(true);
-			System.out.println("process "+this.processes.get(i).getPid() + "  moved to ready queue");
+			//System.out.println("process "+this.processes.get(i).getPid() + "  moved to ready queue");
 			}
 		}
 	}
 	public void scheduler() throws IOException {
-		System.out.println("The scheduler starts");
-		while(true) {	
-	    checkArrival();
+		System.out.println("<<<  The scheduler starts  >>>");
+		while(true) {
+		checkArrival();
+		System.out.println("readyQueue > "+this.readyQueue);
+		System.out.println("blocedQueue > "+this.blockedQueue );
 		if(!readyQueue.isEmpty()) {
 		  process temp = this.readyQueue.poll();
-		  System.out.println("process "+temp.getPid()+" is chosen");
+		  System.out.print("process "+temp.getPid()+" is chosen from readyQueue by the scheduler |||  ");
 		  System.out.println("process "+temp.getPid()+" is currently executing");
 		  temp.setCurrentStatus(processStatus.Running);
 		  for(int i =0 ; (i<timeSlice) &&(!temp.finshed)&&(!temp.getCurrentStatus().equals(processStatus.BLOCKED)) ;i++) {
@@ -86,8 +88,8 @@ public class interpruter {
 				  if(temp2.equals("readFile"))
 					  if(!temp.instructions.peek().isEmpty())
 					  temp.instructions.peek().push(tempCalls.executeSpecialInstruction(temp2, temp1, temp));
-				  else
-				  tempCalls.executeInstruction2(temp2,temp1,temp);
+				  else {
+				  tempCalls.executeInstruction2(temp2,temp1,temp);}
 			  }else {
 				  String temp2 = temp.instructions.peek().pop();
 				  String temp3 = temp.instructions.peek().pop();
@@ -138,18 +140,5 @@ public class interpruter {
 		programs.add(program2);
 		programs.add(program3);
 		inter.programToprocess(programs);
-		//System.out.println();
-//		process p = new process(0, 0, processStatus.BLOCKED);
-//		inter.readInstructions(program3, p);
-//		int size = p.instructions.size();
-//		for( int i =0 ; i<size ;i++) {
-//			Stack<String> temp = p.instructions.poll();
-//			while(!temp.isEmpty()) {
-//				System.out.println(temp.pop());
-//			}
-//			
-//		}
-//	}
-
 }
 }
