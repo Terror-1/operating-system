@@ -45,7 +45,7 @@ public class systemCalls {
 	  }
 	  
 	  case "printFromTo" : {
-	  System.out.println("process "+p.getPid()+" is printing from "+ arg2 +"to"+arg1 );
+	  System.out.println("process "+p.getPid()+" is printing from "+ arg2 +" to "+arg3);
 	  cp.printFromTo(arg2, arg3, p);
 	  break;}
 	  default : break;

@@ -8,7 +8,7 @@ public class codeParser {
 			System.out.println(p.variables.get(arg)+"");
 		}
 		else {
-		System.out.println(arg+"");
+		System.out.println("printed value : "+arg+"");
 		  }
 	
 	}
@@ -23,7 +23,8 @@ public class codeParser {
 		}
 		else {
 			p.variables.put(arg1, arg2);
-		}	
+		}
+		System.out.println("assigned succesfully");
 	}
 	public String readFile(String arg,process p) throws IOException {
 		String filepath;

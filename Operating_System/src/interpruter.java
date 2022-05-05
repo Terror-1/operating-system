@@ -16,12 +16,12 @@ public class interpruter {
 	systemCalls tempCalls;
 	Set<String> ourInstruction = new HashSet<String>();
 	public interpruter() {
-		this.tempCalls=new systemCalls(blockedQueue , readyQueue);
 		this.parser=new codeParser();
 		this.timeOfArrival=new int[totaNumOfProcesses];
 		this.readyQueue = new LinkedList<>();
 		this.blockedQueue= new LinkedList<>();
 		this.processes=new ArrayList<>();
+		this.tempCalls=new systemCalls(blockedQueue , readyQueue);
 		this.timeSlice=2;
 		this.clk=0;
 		this.ourInstruction.add("print");
@@ -63,7 +63,7 @@ public class interpruter {
 		for(int i =0 ; i <this.processes.size();i++) {
 			if ((this.processes.get(i).getTimeOfArrival()==clk)&&(this.processes.get(i).getaddedFlag()==false)) {
 				this.readyQueue.add(this.processes.get(i));
-			this.processes.get(i).setaddedFlag(true);
+			    this.processes.get(i).setaddedFlag(true);
 			//System.out.println("process "+this.processes.get(i).getPid() + "  moved to ready queue");
 			}
 		}
@@ -72,48 +72,64 @@ public class interpruter {
 		System.out.println("<<<  The scheduler starts  >>>");
 		while(true) {
 		checkArrival();
-		System.out.println("readyQueue > "+this.readyQueue);
-		System.out.println("blocedQueue > "+this.blockedQueue );
+
 		if(!readyQueue.isEmpty()) {
 		  process temp = this.readyQueue.poll();
 		  System.out.print("process "+temp.getPid()+" is chosen from readyQueue by the scheduler |||  ");
 		  System.out.println("process "+temp.getPid()+" is currently executing");
 		  temp.setCurrentStatus(processStatus.Running);
 		  for(int i =0 ; (i<timeSlice) &&(!temp.finshed)&&(!temp.getCurrentStatus().equals(processStatus.BLOCKED)) ;i++) {
-			  if(temp.instructions.peek().isEmpty())
-				  temp.instructions.poll();
+			  System.out.println("*** Clock Time is " + clk+" ***");
+			  System.out.println("readyQueue > "+this.readyQueue);
+			  System.out.println("blocedQueue > "+this.blockedQueue );
 			  String temp1 = temp.instructions.peek().pop();
-			  if(this.ourInstruction.contains(temp.instructions.peek().peek())) {
+			  if(this.ourInstruction.contains(temp.instructions.peek().peek()))
+			  {
 				  String temp2 = temp.instructions.peek().pop();
-				  if(temp2.equals("readFile"))
+				  if(temp2.equals("readFile")) {
 					  if(!temp.instructions.peek().isEmpty())
-					  temp.instructions.peek().push(tempCalls.executeSpecialInstruction(temp2, temp1, temp));
+					  temp.instructions.peek().push(tempCalls.executeSpecialInstruction(temp2, temp1, temp));}
+				  
 				  else {
-				  tempCalls.executeInstruction2(temp2,temp1,temp);}
+				  tempCalls.executeInstruction2(temp2,temp1,temp);
+				  if(temp.instructions.peek().isEmpty())
+					  temp.instructions.poll();
+				  }
 			  }else {
 				  String temp2 = temp.instructions.peek().pop();
 				  String temp3 = temp.instructions.peek().pop();
 				  tempCalls.executeInstruction3(temp3,temp2,temp1,temp);
+				  if(temp.instructions.peek().isEmpty())
+					  temp.instructions.poll();
 
 			  }
+			  clk++;
+			  checkArrival();
 			  if(temp.instructions.isEmpty()) {
 				  temp.finshed=true;
-				 this.numOfFinshed++;
-				 temp.setCurrentStatus(processStatus.FINISHED);
-				 
-			  }else {
-				  this.readyQueue.add(temp);
-				  temp.setCurrentStatus(processStatus.READY);
+				  this.numOfFinshed++;
+				  temp.setCurrentStatus(processStatus.FINISHED);
+				  System.out.println("process " + temp.getPid()+" is Finished");
+				  
+				  
 			  }
-			  checkArrival();
-			  clk++;
+			  else {
+				  if(!temp.getCurrentStatus().equals(processStatus.BLOCKED)&&(clk%timeSlice==0)) {
+					  this.readyQueue.add(temp);
+					  temp.setCurrentStatus(processStatus.READY);
+					  System.out.println("process "+temp.getPid()+" return back from running to ready queue");
+				  }
+			  System.out.println("-------------------------------------------------");
 			  
 		}
 		  
+			  
+		  }
+		  
 		}
 		else {
-			 checkArrival();
-			  clk++;
+			clk++;
+			checkArrival();
 			  
 			  
 		}
@@ -127,6 +143,7 @@ public class interpruter {
 	public void setTimeSlice(int timeSlice) {
 		this.timeSlice = timeSlice;
 	}
+	
 	public static void main(String[] args) throws IOException {
 		interpruter inter = new interpruter();
 		String program1="src/Program_1.txt";

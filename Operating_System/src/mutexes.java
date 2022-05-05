@@ -15,7 +15,7 @@ public class mutexes {
 	public mutexes(Queue<process> blockedQueue ,Queue<process> readyQueue) {
 		this.blockedOfFile= new LinkedList<>();
 		this.blockedOfUserInput=new LinkedList<>();
-		this.blockedOfUserInput= new LinkedList<>();
+		this.blockedOfUserOutput= new LinkedList<>();
 		this.userInput=true;
 		this.userOutput=true;
 		this.file=true;
@@ -33,13 +33,15 @@ public class mutexes {
 			if(!userInput) {
 				blockedOfUserInput.add(p);
 				this.generalBlocked.add(p);
-				System.out.println("process "+p.getPid()+"is blocked over user Input");
+				System.out.println("process "+p.getPid()+" is blocked over user Input");
+				System.out.println("processes that is blocked on userInput >" + this.blockedOfUserInput);
 				p.setCurrentStatus(processStatus.BLOCKED);
 			}
 			else {
 				currentOwner[0]=p.getPid();
 				userInput=false;
 			}
+			break;
 			
 		}
 			
@@ -47,7 +49,8 @@ public class mutexes {
 			if(!userOutput) {
 				blockedOfUserOutput.add(p);
 				this.generalBlocked.add(p);
-				System.out.println("process "+p.getPid()+"is blocked over user output");
+				System.out.println("process "+p.getPid()+" is blocked over user output");
+				System.out.println("processes that is blocked on userOutput >" + this.blockedOfUserOutput);
 				p.setCurrentStatus(processStatus.BLOCKED);
 				
 			}
@@ -55,19 +58,23 @@ public class mutexes {
 				currentOwner[1]=p.getPid();
 				userOutput=false;
 			}
+			break;
 			
 		}
 		case "file":	
 			if(!file) {
 				blockedOfFile.add(p);
 				this.generalBlocked.add(p);
-				System.out.println("process "+p.getPid()+"is blocked over file");
+				System.out.println("process "+p.getPid()+" is blocked over file");
+				System.out.println("processes that is blocked on File >" + this.blockedOfFile);
 				p.setCurrentStatus(processStatus.BLOCKED);
 			}
 			else {
 				currentOwner[2]=p.getPid();
 				file=false;
 		}
+			break;
+		
 		}
 	}
 	public void semSignal(String arg , int pid){
@@ -75,8 +82,8 @@ public class mutexes {
 			if(!blockedOfUserInput.isEmpty()) {
 			currentOwner[0]=blockedOfUserInput.peek().getPid();
 			RQ.add(blockedOfUserInput.peek());
-			System.out.println("process "+blockedOfUserInput.poll().getPid()+"blocled queue >>> ready queue");
-			//remove from the general blocked queue
+			System.out.println("process "+blockedOfUserInput.peek().getPid()+" moved from blocled queue >>> ready queue");
+			deleteFromQueue(generalBlocked,blockedOfUserInput.poll().getPid() );
 			}
 			else userInput=true;
 		}
@@ -84,8 +91,8 @@ public class mutexes {
 			if(!blockedOfUserOutput.isEmpty()) {
 				currentOwner[1] =blockedOfUserOutput.peek().getPid();
 				RQ.add(blockedOfUserOutput.peek());
-				System.out.println("process "+blockedOfUserOutput.poll().getPid()+"blocled queue >>> ready queue");
-				
+				System.out.println("process "+blockedOfUserOutput.peek().getPid()+" moved from blocled queue >>> ready queue");
+				deleteFromQueue(generalBlocked,blockedOfUserOutput.poll().getPid() );
 			}
 			
 			else userOutput=true;
@@ -94,11 +101,20 @@ public class mutexes {
 			if(!blockedOfFile.isEmpty()) {
 				currentOwner[2]=blockedOfFile.peek().getPid();
 				RQ.add(blockedOfFile.peek());
-				System.out.println("process "+blockedOfFile.poll().getPid()+"blocled queue >>> ready queue");
-				
+				System.out.println("process "+blockedOfFile.peek().getPid()+" moved from blocled queue >>> ready queue");
+				deleteFromQueue(generalBlocked,blockedOfFile.poll().getPid() );
 			}
 			else file=true;
 		}
 		
 	}
+	public static void deleteFromQueue(Queue<process> x,int pid) {
+		Queue<process> temp = new LinkedList<>();
+		while(!x.isEmpty()) {
+			process y = x.poll();
+			if(!(y.getPid()==pid))temp.add(y);
+		}
+		x=temp;
+	}
+	
 }
