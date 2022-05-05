@@ -60,9 +60,20 @@ public class codeParser {
 		else firstNumber=Integer.parseInt(x);
 		if(p.variables.containsKey(y))secondNumber=Integer.parseInt(p.variables.get(y));
 		else secondNumber=Integer.parseInt(y);	
-		for (int i = firstNumber+1 ; i<=secondNumber;i++) {
-			System.out.println(i);
+		
+		if(firstNumber<secondNumber)swap(firstNumber, secondNumber);
+		
+		System.out.print("values from " +firstNumber + " to "+ secondNumber+" >>> ");
+		for (int i = firstNumber+1 ; i<secondNumber-1;i++) {
+			System.out.print(i+ ",");
 		}
+		System.out.print(secondNumber-1);
+		System.out.println();
+	}
+	public static void swap(int x,int y) {
+		int temp = x;
+		x=y;
+		y=temp;
 	}
 	
 }

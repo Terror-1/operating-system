@@ -103,6 +103,7 @@ public class interpruter {
 					  temp.instructions.poll();
 
 			  }
+			  System.out.println("-------------------------------------------------");
 			  clk++;
 			  checkArrival();
 			  if(temp.instructions.isEmpty()) {
@@ -119,7 +120,6 @@ public class interpruter {
 					  temp.setCurrentStatus(processStatus.READY);
 					  System.out.println("process "+temp.getPid()+" return back from running to ready queue");
 				  }
-			  System.out.println("-------------------------------------------------");
 			  
 		}
 		  
@@ -128,13 +128,16 @@ public class interpruter {
 		  
 		}
 		else {
+		     System.out.println("-------------------------------------------------");
 			clk++;
 			checkArrival();
 			  
 			  
 		}
 		
-		if(numOfFinshed==totaNumOfProcesses)break;
+		if(numOfFinshed==totaNumOfProcesses) {
+			System.out.println("<<<  All the processes have finished  >>>");
+			break;}
 			
 		}
 		
