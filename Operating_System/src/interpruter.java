@@ -70,7 +70,7 @@ public class interpruter {
 	}
 	public void scheduler() throws IOException {
 		System.out.println("<<<  The scheduler starts  >>>");
-		while(true) {
+		while(this.numOfFinshed!=totaNumOfProcesses) {
 		checkArrival();
 
 		if(!readyQueue.isEmpty()) {
@@ -103,43 +103,34 @@ public class interpruter {
 					  temp.instructions.poll();
 
 			  }
-			  System.out.println("-------------------------------------------------");
 			  clk++;
 			  checkArrival();
+			  System.out.println("--------------------------------------------------");
 			  if(temp.instructions.isEmpty()) {
 				  temp.finshed=true;
 				  this.numOfFinshed++;
 				  temp.setCurrentStatus(processStatus.FINISHED);
-				  System.out.println("process " + temp.getPid()+" is Finished");
-				  
-				  
-			  }
-			  else {
-				  if(!temp.getCurrentStatus().equals(processStatus.BLOCKED)&&(clk%timeSlice==0)) {
-					  this.readyQueue.add(temp);
-					  temp.setCurrentStatus(processStatus.READY);
-					  System.out.println("process "+temp.getPid()+" return back from running to ready queue");
+				  System.out.println(" $$$ process " + temp.getPid()+" is Finished $$$");
 				  }
+		
 			  
 		}
+		  if(!temp.getCurrentStatus().equals(processStatus.BLOCKED)&&(!temp.instructions.isEmpty())) {
+				  this.readyQueue.add(temp);
+				  temp.setCurrentStatus(processStatus.READY);
+				  System.out.println("process "+temp.getPid()+" return back from running to ready queue");
+			  }
 		  
 			  
-		  }
-		  
-		}
+		 	}
 		else {
-		     System.out.println("-------------------------------------------------");
 			clk++;
 			checkArrival();
 			  
-			  
 		}
-		
-		if(numOfFinshed==totaNumOfProcesses) {
-			System.out.println("<<<  All the processes have finished  >>>");
-			break;}
-			
 		}
+		System.out.println("<<<  All the processes have finished  >>>");
+
 		
 	}
 	
