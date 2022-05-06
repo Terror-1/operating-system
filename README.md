@@ -8,7 +8,7 @@
 ## Project Description
 
 ### Course 
-Operating Systems (CSEN 602), spring 2021
+Operating Systems (CSEN 602), spring 2022
 
 ### Theme
 The theme of the project, is to understand the concepts of an Operating System  by building
