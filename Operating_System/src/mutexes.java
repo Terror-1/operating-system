@@ -1,5 +1,6 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.io.*;
+import java.time.Year;
+import java.util.*;
 
 public class mutexes {
 	private Queue<process> blockedOfUserInput;
@@ -83,7 +84,9 @@ public class mutexes {
 			currentOwner[0]=blockedOfUserInput.peek().getPid();
 			RQ.add(blockedOfUserInput.peek());
 			System.out.println("process "+blockedOfUserInput.peek().getPid()+" moved from blocled queue >>> ready queue");
-			deleteFromQueue(generalBlocked,blockedOfUserInput.poll().getPid() );
+			deleteFromQueue(generalBlocked,blockedOfUserInput.peek().getPid() );
+			this.blockedOfUserInput.poll();
+		    
 			}
 			else userInput=true;
 		}
@@ -92,7 +95,8 @@ public class mutexes {
 				currentOwner[1] =blockedOfUserOutput.peek().getPid();
 				RQ.add(blockedOfUserOutput.peek());
 				System.out.println("process "+blockedOfUserOutput.peek().getPid()+" moved from blocled queue >>> ready queue");
-				deleteFromQueue(generalBlocked,blockedOfUserOutput.poll().getPid() );
+				deleteFromQueue(generalBlocked,blockedOfUserOutput.peek().getPid() );
+				this.blockedOfUserOutput.poll();
 			}
 			
 			else userOutput=true;
@@ -102,19 +106,23 @@ public class mutexes {
 				currentOwner[2]=blockedOfFile.peek().getPid();
 				RQ.add(blockedOfFile.peek());
 				System.out.println("process "+blockedOfFile.peek().getPid()+" moved from blocled queue >>> ready queue");
-				deleteFromQueue(generalBlocked,blockedOfFile.poll().getPid() );
+				deleteFromQueue(generalBlocked,blockedOfFile.peek().getPid() );
+				this.blockedOfFile.poll();
 			}
 			else file=true;
 		}
 		
 	}
+	
 	public static void deleteFromQueue(Queue<process> x,int pid) {
 		Queue<process> temp = new LinkedList<>();
 		while(!x.isEmpty()) {
 			process y = x.poll();
 			if(!(y.getPid()==pid))temp.add(y);
 		}
-		x=temp;
+		while(!temp.isEmpty()) {
+			x.add(temp.poll());
+		}
 	}
 	
 }

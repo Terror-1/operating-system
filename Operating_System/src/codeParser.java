@@ -1,4 +1,6 @@
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class codeParser {
@@ -33,25 +35,26 @@ public class codeParser {
 		File file = new File(filepath);
 		Scanner sc = new Scanner(file);
 		String st = "";
-		while (sc.hasNext()) {
-			st+= sc.next()+"\n";
+		while (sc.hasNextLine()) {
+			st+= sc.nextLine()+"\n";
 		
 		}
 		return st;
 	}
-	public void writeFile(String arg1, String arg2,process p) {
-		String filePath;
-		if (p.variables.containsKey(arg1))filePath=p.variables.get(arg1);
-		else filePath=arg1;
+	
+	public void writeFile(String arg1, String arg2,process p) throws IOException {
+		String fileName;
+		if (p.variables.containsKey(arg1))fileName=p.variables.get(arg1);
+		else fileName=arg1;
 		String text;
 		if (p.variables.containsKey(arg2))text=p.variables.get(arg2);
 		else text=arg2;
+		String filePath="c:\\Users\\"+System.getProperty("user.name")+"\\Desktop"; 
+		createFile(filePath,arg1);
+		FileWriter myWriter = new FileWriter(filePath+"\\"+fileName+".txt");
+		myWriter.write(text);
+		myWriter.close();
 		
-	    try (PrintWriter result = new PrintWriter(filePath)) {
-	            result.println(text);
-	        } catch (FileNotFoundException e) {
-	            e.printStackTrace();
-	        }
     }
 	public void printFromTo(String x , String y,process p) {
 		int firstNumber;
@@ -69,10 +72,13 @@ public class codeParser {
 		}
 		System.out.println();
 	}
+	public static void createFile(String arg , String fileName) throws IOException {
+		File file = new File(arg+"\\"+fileName+".txt");
+		file.createNewFile();		
+	}
 	public static void swap(int x,int y) {
 		int temp = x;
 		x=y;
 		y=temp;
 	}
-	
 }

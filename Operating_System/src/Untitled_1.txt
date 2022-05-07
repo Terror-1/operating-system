@@ -1,0 +1,6 @@
+processes order in the scheduler
+fle path ? should be default or an input
+what do you mean by changing the order
+the architecture 
+printing the readyQueue after or before the execution
+ 

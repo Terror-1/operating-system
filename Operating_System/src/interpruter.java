@@ -79,9 +79,6 @@ public class interpruter {
 		  System.out.println("process "+temp.getPid()+" is currently executing");
 		  temp.setCurrentStatus(processStatus.Running);
 		  for(int i =0 ; (i<timeSlice) &&(!temp.finshed)&&(!temp.getCurrentStatus().equals(processStatus.BLOCKED)) ;i++) {
-			  System.out.println("*** Clock Time is " + clk+" ***");
-			  System.out.println("readyQueue > "+this.readyQueue);
-			  System.out.println("blocedQueue > "+this.blockedQueue );
 			  String temp1 = temp.instructions.peek().pop();
 			  if(this.ourInstruction.contains(temp.instructions.peek().peek()))
 			  {
@@ -103,9 +100,8 @@ public class interpruter {
 					  temp.instructions.poll();
 
 			  }
-			  clk++;
 			  checkArrival();
-			  System.out.println("--------------------------------------------------");
+			  clk++;
 			  if(temp.instructions.isEmpty()) {
 				  temp.finshed=true;
 				  this.numOfFinshed++;
@@ -113,6 +109,10 @@ public class interpruter {
 				  System.out.println(" $$$ process " + temp.getPid()+" is Finished $$$");
 				  }
 		
+			  System.out.println("readyQueue > "+this.readyQueue);
+			  System.out.println("blocedQueue > "+this.blockedQueue );
+			  System.out.println("*** Clock Time is " + (clk-1)+" ***");
+			  System.out.println("--------------------------------------------------");
 			  
 		}
 		  if(!temp.getCurrentStatus().equals(processStatus.BLOCKED)&&(!temp.instructions.isEmpty())) {
@@ -146,10 +146,11 @@ public class interpruter {
 		ArrayList<String> programs = new ArrayList<>();
 		inter.timeOfArrival[0]=0;
 		inter.timeOfArrival[1]=1;
-		inter.timeOfArrival[2]=4;
+		inter.timeOfArrival[2]=1;
 		programs.add(program1);
 		programs.add(program2);
 		programs.add(program3);
 		inter.programToprocess(programs);
+		
 }
 }

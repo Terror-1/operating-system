@@ -32,7 +32,7 @@ public class systemCalls {
 	  default :break;
 	  } 
   }
-  public void executeInstruction3(String arg1,String arg2,String arg3,process p) {
+  public void executeInstruction3(String arg1,String arg2,String arg3,process p) throws IOException {
 	  switch(arg1) {
 	  case "assign" : {
 		  System.out.println("process "+p.getPid()+" is performing an assign instruction"  );
