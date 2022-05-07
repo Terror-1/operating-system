@@ -1,6 +1,4 @@
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class codeParser {
@@ -30,7 +28,7 @@ public class codeParser {
 	}
 	public String readFile(String arg,process p) throws IOException {
 		String filepath;
-		if (p.variables.containsKey(arg))filepath=p.variables.get(arg);
+		if (p.variables.containsKey(arg))filepath=System.getProperty("user.dir")+"\\Src\\"+p.variables.get(arg)+".txt";
 		else filepath=arg;
 		File file = new File(filepath);
 		Scanner sc = new Scanner(file);
@@ -49,11 +47,12 @@ public class codeParser {
 		String text;
 		if (p.variables.containsKey(arg2))text=p.variables.get(arg2);
 		else text=arg2;
-		String filePath="c:\\Users\\"+System.getProperty("user.name")+"\\Desktop"; 
+		String filePath=System.getProperty("user.dir")+"\\Src\\"; 
 		createFile(filePath,arg1);
 		FileWriter myWriter = new FileWriter(filePath+"\\"+fileName+".txt");
 		myWriter.write(text);
 		myWriter.close();
+		System.out.println("File created and writed on it");
 		
     }
 	public void printFromTo(String x , String y,process p) {

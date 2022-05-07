@@ -3,17 +3,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 public class interpruter {
-	mutexes mut ;
 	codeParser parser;
+	systemCalls tempCalls;
 	int[]timeOfArrival;
 	Queue<process> readyQueue;
 	Queue<process> blockedQueue;
 	ArrayList<process> processes;
 	int timeSlice;
 	int clk;
-	int totaNumOfProcesses=3; // blabizo
+	int totaNumOfProcesses=3;
 	int numOfFinshed=0;
-	systemCalls tempCalls;
 	Set<String> ourInstruction = new HashSet<String>();
 	public interpruter() {
 		this.parser=new codeParser();
@@ -146,7 +145,7 @@ public class interpruter {
 		ArrayList<String> programs = new ArrayList<>();
 		inter.timeOfArrival[0]=0;
 		inter.timeOfArrival[1]=1;
-		inter.timeOfArrival[2]=1;
+		inter.timeOfArrival[2]=4;
 		programs.add(program1);
 		programs.add(program2);
 		programs.add(program3);
