@@ -5,7 +5,6 @@ public class process {
 	private int timeOfArrival;
 	private processStatus currentStatus;
 	private boolean addedFlag=false;
-	boolean finshed=false;
 	Hashtable<String, String> variables;
 	Queue<Stack<String>> instructions;
 	public process(int pid ,int timeOfArival, processStatus e) {

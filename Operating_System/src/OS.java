@@ -2,25 +2,25 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
-public class interpruter {
+public class OS {
 	codeParser parser;
-	systemCalls tempCalls;
+	systemCalls systemCalls;
 	int[]timeOfArrival;
 	Queue<process> readyQueue;
 	Queue<process> blockedQueue;
 	ArrayList<process> processes;
-	int timeSlice;
-	int clk;
-	int totaNumOfProcesses=3;
-	int numOfFinshed=0;
 	Set<String> ourInstruction = new HashSet<String>();
-	public interpruter() {
+	private int timeSlice;
+	private int clk;
+	private int totaNumOfProcesses=3;
+	private int numOfFinshed=0;
+	public OS() {
 		this.parser=new codeParser();
 		this.timeOfArrival=new int[totaNumOfProcesses];
 		this.readyQueue = new LinkedList<>();
 		this.blockedQueue= new LinkedList<>();
 		this.processes=new ArrayList<>();
-		this.tempCalls=new systemCalls(blockedQueue , readyQueue);
+		this.systemCalls=new systemCalls(blockedQueue , readyQueue);
 		this.timeSlice=2;
 		this.clk=0;
 		this.ourInstruction.add("print");
@@ -77,12 +77,12 @@ public class interpruter {
 		  System.out.print("process "+temp.getPid()+" is chosen from readyQueue by the scheduler |||  ");
 		  System.out.println("process "+temp.getPid()+" is currently executing");
 		  temp.setCurrentStatus(processStatus.Running);
-		  for(int i =0 ; (i<timeSlice) &&(!temp.finshed)&&(!temp.getCurrentStatus().equals(processStatus.BLOCKED)) ;i++) {
+		  for(int i =0 ; (i<timeSlice) &&(!temp.getCurrentStatus().equals(processStatus.FINISHED))&&(!temp.getCurrentStatus().equals(processStatus.BLOCKED)) ;i++) {
 			  checkArrival();
 			  String temp1 = temp.instructions.peek().pop();
 			  if(temp1.equals("input")) {
 				  System.out.println("Process "+temp.getPid()+ " is taking input ");
-				  temp.instructions.peek().push(tempCalls.takeInput())	;	 
+				  temp.instructions.peek().push(systemCalls.takeInput())	;	 
 				  }
 			  else {
 			  if(this.ourInstruction.contains(temp.instructions.peek().peek()))
@@ -90,17 +90,17 @@ public class interpruter {
 				  String temp2 = temp.instructions.peek().pop();
 				  if(temp2.equals("readFile")) {
 					  if(!temp.instructions.peek().isEmpty())
-					  temp.instructions.peek().push(tempCalls.executeSpecialInstruction(temp2, temp1, temp));}
+					  temp.instructions.peek().push(systemCalls.executeSpecialInstruction(temp2, temp1, temp));}
 				  
 				  else {
-				  tempCalls.executeInstruction2(temp2,temp1,temp);
+				  systemCalls.executeInstruction2(temp2,temp1,temp);
 				  if(temp.instructions.peek().isEmpty())
 					  temp.instructions.poll();
 				  }
 			  }else {
 				  String temp2 = temp.instructions.peek().pop();
 				  String temp3 = temp.instructions.peek().pop();
-				  tempCalls.executeInstruction3(temp3,temp2,temp1,temp);
+				  systemCalls.executeInstruction3(temp3,temp2,temp1,temp);
 				  if(temp.instructions.peek().isEmpty())
 					  temp.instructions.poll();
 
@@ -108,7 +108,6 @@ public class interpruter {
 			  }
 			  clk++;
 			  if(temp.instructions.isEmpty()) {
-				  temp.finshed=true;
 				  this.numOfFinshed++;
 				  temp.setCurrentStatus(processStatus.FINISHED);
 				  System.out.println(" $$$ process " + temp.getPid()+" is Finished $$$");
@@ -143,26 +142,47 @@ public class interpruter {
 	public void setTimeSlice(int timeSlice) {
 		this.timeSlice = timeSlice;
 	}
+	public int getClk() {
+		return clk;
+	}
+	public void setClk(int clk) {
+		this.clk = clk;
+	}
+	public int getTotaNumOfProcesses() {
+		return totaNumOfProcesses;
+	}
+	public void setTotaNumOfProcesses(int totaNumOfProcesses) {
+		this.totaNumOfProcesses = totaNumOfProcesses;
+	}
+	public int getNumOfFinshed() {
+		return numOfFinshed;
+	}
+	public void setNumOfFinshed(int numOfFinshed) {
+		this.numOfFinshed = numOfFinshed;
+	}
+	public int getTimeSlice() {
+		return timeSlice;
+	}
 	
 	public static void main(String[] args) throws IOException {
 		Scanner sc = new Scanner(System.in);
-		interpruter inter = new interpruter();
+		OS operatingSystem = new OS();
 		String program1="src/Program_1.txt";
 		String program2="src/Program_2.txt";
 		String program3="src/Program_3.txt";
 		ArrayList<String> programs = new ArrayList<>();
 		System.out.println("please enter time slice value");
-		inter.setTimeSlice(sc.nextInt());
+		operatingSystem.setTimeSlice(sc.nextInt());
 		System.out.println("please enter time arrival of first program");
-		inter.timeOfArrival[0]=sc.nextInt();
+		operatingSystem.timeOfArrival[0]=sc.nextInt();
 		System.out.println("please enter time arrival of second program");
-		inter.timeOfArrival[1]=sc.nextInt();
+		operatingSystem.timeOfArrival[1]=sc.nextInt();
 		System.out.println("please enter time arrival of third program");
-		inter.timeOfArrival[2]=sc.nextInt();
+		operatingSystem.timeOfArrival[2]=sc.nextInt();
 		programs.add(program1);
 		programs.add(program2);
 		programs.add(program3);
-		inter.programToprocess(programs);
+		operatingSystem.programToprocess(programs);
 		
 }
 }

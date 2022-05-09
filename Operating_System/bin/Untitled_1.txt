@@ -1,6 +1,0 @@
-processes order in the scheduler
-fle path ? should be default or an input
-what do you mean by changing the order
-the architecture 
-printing the readyQueue after or before the execution
-what to priortize at clock time 4 process 2 return from mutex and process 3 entered the ready queue
