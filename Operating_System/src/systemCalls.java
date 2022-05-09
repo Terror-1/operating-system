@@ -56,4 +56,15 @@ public class systemCalls {
 	 System.out.println("process "+p.getPid()+" reading file "+arg2 );
 	 return cp.readFile(arg2, p);
   }
+  public String takeInput() {
+	  Scanner sc = new Scanner(System.in);
+	  System.out.println("Please enter a value");
+	  return sc.next();
+  }
+  public void writeToMemory(String arg1, String arg2,process p) {
+	  p.variables.put(arg1, arg2);
+  }
+  public String readFromMemory(String key,process p) {
+	  return p.variables.getOrDefault(key,"Key not Found");
+  }
 }

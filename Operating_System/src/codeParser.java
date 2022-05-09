@@ -13,11 +13,6 @@ public class codeParser {
 	
 	}
 	public void assign(String arg1 ,String arg2,process p){
-		if (arg2.equals("input")) {
-			System.out.println("Please enter a value");
-			Scanner sc = new Scanner(System.in);
-			arg2= sc.next();
-		}
 		if (p.variables.containsKey(arg2)) {
 			p.variables.put(arg1, p.variables.get(arg2));
 		}

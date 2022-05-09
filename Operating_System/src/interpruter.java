@@ -78,7 +78,13 @@ public class interpruter {
 		  System.out.println("process "+temp.getPid()+" is currently executing");
 		  temp.setCurrentStatus(processStatus.Running);
 		  for(int i =0 ; (i<timeSlice) &&(!temp.finshed)&&(!temp.getCurrentStatus().equals(processStatus.BLOCKED)) ;i++) {
+			  checkArrival();
 			  String temp1 = temp.instructions.peek().pop();
+			  if(temp1.equals("input")) {
+				  System.out.println("Process "+temp.getPid()+ " is taking input ");
+				  temp.instructions.peek().push(tempCalls.takeInput())	;	 
+				  }
+			  else {
 			  if(this.ourInstruction.contains(temp.instructions.peek().peek()))
 			  {
 				  String temp2 = temp.instructions.peek().pop();
@@ -99,7 +105,7 @@ public class interpruter {
 					  temp.instructions.poll();
 
 			  }
-			  checkArrival();
+			  }
 			  clk++;
 			  if(temp.instructions.isEmpty()) {
 				  temp.finshed=true;
@@ -122,6 +128,7 @@ public class interpruter {
 		  
 			  
 		 	}
+		  
 		else {
 			clk++;
 			checkArrival();
@@ -138,14 +145,20 @@ public class interpruter {
 	}
 	
 	public static void main(String[] args) throws IOException {
+		Scanner sc = new Scanner(System.in);
 		interpruter inter = new interpruter();
 		String program1="src/Program_1.txt";
 		String program2="src/Program_2.txt";
 		String program3="src/Program_3.txt";
 		ArrayList<String> programs = new ArrayList<>();
-		inter.timeOfArrival[0]=0;
-		inter.timeOfArrival[1]=1;
-		inter.timeOfArrival[2]=4;
+		System.out.println("please enter time slice value");
+		inter.setTimeSlice(sc.nextInt());
+		System.out.println("please enter time arrival of first program");
+		inter.timeOfArrival[0]=sc.nextInt();
+		System.out.println("please enter time arrival of second program");
+		inter.timeOfArrival[1]=sc.nextInt();
+		System.out.println("please enter time arrival of third program");
+		inter.timeOfArrival[2]=sc.nextInt();
 		programs.add(program1);
 		programs.add(program2);
 		programs.add(program3);
