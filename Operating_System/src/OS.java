@@ -1,15 +1,13 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 public class OS {
 	codeParser parser;
 	systemCalls systemCalls;
-	int[]timeOfArrival;
 	Queue<process> readyQueue;
 	Queue<process> blockedQueue;
 	ArrayList<process> processes;
 	Set<String> ourInstruction = new HashSet<String>();
+	int[]timeOfArrival;
 	private int timeSlice;
 	private int clk;
 	private int totaNumOfProcesses=3;
@@ -33,26 +31,11 @@ public class OS {
 		
 		
 	}
-	public void readInstructions(String arg,process p) throws FileNotFoundException {
-		File file = new File(arg);
-		Scanner sc = new Scanner(file);
-		String st;
-		while(sc.hasNext()) {
-			Stack<String> temp = new Stack<>();
-			st= sc.nextLine();
-			String stringBuilder[] = st.split(" ");
-			for(int i = 0 ; i <stringBuilder.length;i++) {
-				temp.push(stringBuilder[i]);
-			}
-			
-			p.instructions.add(temp);	
-		}
-	}
 	public void programToprocess(ArrayList<String> programs) throws IOException {
 		for(int i=0;i<programs.size();i++) {
 			process p = new process(i,this.timeOfArrival[i], processStatus.NEW);
 			this.processes.add(p);
-			readInstructions(programs.get(i), p);
+			parser.parseInput(programs.get(i), p);
 			
 		}
 		this.scheduler();
@@ -74,10 +57,10 @@ public class OS {
 
 		if(!readyQueue.isEmpty()) {
 		  process temp = this.readyQueue.poll();
-		  System.out.print("process "+temp.getPid()+" is chosen from readyQueue by the scheduler |||  ");
-		  System.out.println("process "+temp.getPid()+" is currently executing");
+		  System.out.println("process "+temp.getPid()+" is chosen from readyQueue by the scheduler  ");
 		  temp.setCurrentStatus(processStatus.Running);
 		  for(int i =0 ; (i<timeSlice) &&(!temp.getCurrentStatus().equals(processStatus.FINISHED))&&(!temp.getCurrentStatus().equals(processStatus.BLOCKED)) ;i++) {
+			  System.out.println("process "+temp.getPid()+" is currently executing");
 			  checkArrival();
 			  String temp1 = temp.instructions.peek().pop();
 			  if(temp1.equals("input")) {
@@ -116,21 +99,23 @@ public class OS {
 			  System.out.println("readyQueue > "+this.readyQueue);
 			  System.out.println("blocedQueue > "+this.blockedQueue );
 			  System.out.println("*** Clock Time is " + (clk-1)+" ***");
-			  System.out.println("--------------------------------------------------");
+			  System.out.println("--------------------------------------------------------");
 			  
 		}
 		  if(!temp.getCurrentStatus().equals(processStatus.BLOCKED)&&(!temp.instructions.isEmpty())) {
 				  this.readyQueue.add(temp);
 				  temp.setCurrentStatus(processStatus.READY);
 				  System.out.println("process "+temp.getPid()+" return back from running to ready queue");
-			  }
-		  
-			  
+			  } 
 		 	}
 		  
 		else {
-			clk++;
 			checkArrival();
+			clk++;
+			System.out.println("readyQueue > "+this.readyQueue);
+			System.out.println("blocedQueue > "+this.blockedQueue );
+			System.out.println("*** Clock Time is " + (clk-1)+" ***");
+			System.out.println("--------------------------------------------------------");
 			  
 		}
 		}

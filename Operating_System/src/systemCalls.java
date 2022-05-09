@@ -1,4 +1,4 @@
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 
@@ -13,8 +13,6 @@ public class systemCalls {
 	this.RQ=readyQueue;
 	this.mutex = new mutexes(generalBlocked , RQ);
 	}
-	
-	
   public void executeInstruction2(String arg1,String arg2,process p) {
 	  switch(arg1) {
 	  case "print":  {

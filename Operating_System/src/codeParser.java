@@ -3,6 +3,22 @@ import java.util.*;
 
 public class codeParser {
 
+	public void parseInput(String arg,process p) throws FileNotFoundException {
+		// convert the the program into parse tree stored in stack of the queue
+		File file = new File(arg);
+		Scanner sc = new Scanner(file);
+		String st;
+		while(sc.hasNext()) {
+			Stack<String> temp = new Stack<>();
+			st= sc.nextLine();
+			String stringBuilder[] = st.split(" ");
+			for(int i = 0 ; i <stringBuilder.length;i++) {
+				temp.push(stringBuilder[i]);
+			}
+			
+			p.instructions.add(temp);	
+		}
+	}
 	public void print(String arg ,process p) {
 		if (p.variables.containsKey(arg)){
 			System.out.println(p.variables.get(arg)+"");
@@ -33,8 +49,7 @@ public class codeParser {
 		
 		}
 		return st;
-	}
-	
+	}	
 	public void writeFile(String arg1, String arg2,process p) throws IOException {
 		String fileName;
 		if (p.variables.containsKey(arg1))fileName=p.variables.get(arg1);
@@ -43,13 +58,17 @@ public class codeParser {
 		if (p.variables.containsKey(arg2))text=p.variables.get(arg2);
 		else text=arg2;
 		String filePath=System.getProperty("user.dir")+"\\Src\\"; 
-		createFile(filePath,arg1);
+		createFile(filePath,fileName);
 		FileWriter myWriter = new FileWriter(filePath+"\\"+fileName+".txt");
 		myWriter.write(text);
 		myWriter.close();
 		System.out.println("File created and writed on it");
 		
     }
+	public static void createFile(String arg , String fileName) throws IOException {
+		File file = new File(arg+"\\"+fileName+".txt");
+		file.createNewFile();		
+	}
 	public void printFromTo(String x , String y,process p) {
 		int firstNumber;
 		int secondNumber;
@@ -65,10 +84,6 @@ public class codeParser {
 			System.out.print(i+ " ");
 		}
 		System.out.println();
-	}
-	public static void createFile(String arg , String fileName) throws IOException {
-		File file = new File(arg+"\\"+fileName+".txt");
-		file.createNewFile();		
 	}
 	public static void swap(int x,int y) {
 		int temp = x;

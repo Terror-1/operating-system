@@ -1,5 +1,4 @@
 import java.util.*;
-
 public class process {
     private int pid;
 	private int timeOfArrival;
@@ -12,8 +11,7 @@ public class process {
 		this.instructions=new LinkedList<>();
 		this.timeOfArrival=timeOfArival;
 		this.currentStatus=e;
-		this.variables=new Hashtable<>();
-		
+		this.variables=new Hashtable<>();	
 	}
 	public String toString() {
 		return "process "+this.pid;
