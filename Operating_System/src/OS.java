@@ -1,26 +1,21 @@
 import java.io.*;
 import java.util.*;
-
-import org.w3c.dom.css.Counter;
 public class OS {
 	Queue<process> readyQueue;
 	Queue<process> blockedQueue;
 	ArrayList<process> processes;
 	codeParser parser;
 	executer executer;
-	//int[]timeOfArrival;
-	private Hashtable<Integer, String> programs;
+	int[]timeOfArrival;
 	private Set<String> ourInstruction = new HashSet<String>();
 	private int timeSlice;
 	private int clk;
 	private int totaNumOfProcesses=3;
 	private int numOfFinshed=0;
-	private int Counter =0;
 	public OS() {
 
 		this.parser=new codeParser();
-		//this.timeOfArrival=new int[totaNumOfProcesses];
-		this.programs=new Hashtable<>(); 
+		this.timeOfArrival=new int[totaNumOfProcesses];
 		this.readyQueue = new LinkedList<>();
 		this.blockedQueue= new LinkedList<>();
 		this.processes=new ArrayList<>();
@@ -37,25 +32,23 @@ public class OS {
 		
 		
 	}
-	public void programToprocess(String program,int id) throws IOException {
-			process p = new process(id,this.clk, processStatus.READY);
-			this.readyQueue.add(p);
+	public void programToprocess(ArrayList<String> programs) throws IOException {
+		for(int i=0;i<programs.size();i++) {
+			process p = new process(i,this.timeOfArrival[i], processStatus.NEW);
 			this.processes.add(p);
-			parser.parseInput(programs.get(clk), p);
-	}
-	public void checkArrival() throws IOException {
-		
-		if(programs.containsKey(clk)) {
-			programToprocess(programs.get(clk),Counter);
-			Counter++;
-			programs.remove(clk);
+			parser.parseInput(programs.get(i), p);
+			
 		}
-	  /*for(int i =0 ; i <this.processes.size();i++) {
+		this.scheduler();
+	}
+	public void checkArrival() {
+		
+		for(int i =0 ; i <this.processes.size();i++) {
 			if ((this.processes.get(i).getTimeOfArrival()==clk)&&(this.processes.get(i).getaddedFlag()==false)) {
 				this.readyQueue.add(this.processes.get(i));
 			    this.processes.get(i).setaddedFlag(true);
 			}
-		}*/
+		}
 	}
 	public void scheduler() throws IOException {
 		System.out.println("<<<  The scheduler starts  >>>");
@@ -162,18 +155,19 @@ public class OS {
 		String program1="src/Program_1.txt";
 		String program2="src/Program_2.txt";
 		String program3="src/Program_3.txt";
-		//ArrayList<String> programs = new ArrayList<>();
+		ArrayList<String> programs = new ArrayList<>();
 		System.out.println("please enter time slice value");
 		operatingSystem.setTimeSlice(sc.nextInt());
 		System.out.println("please enter time arrival of first program");
-		operatingSystem.programs.put(sc.nextInt(), program1);
+		operatingSystem.timeOfArrival[0]=sc.nextInt();
 		System.out.println("please enter time arrival of second program");
-		operatingSystem.programs.put(sc.nextInt(), program2);
+		operatingSystem.timeOfArrival[1]=sc.nextInt();
 		System.out.println("please enter time arrival of third program");
-		operatingSystem.programs.put(sc.nextInt(), program3);	
-		//programs.add(program1);
-		//programs.add(program2);
-		//programs.add(program3);
-		operatingSystem.scheduler();
+		operatingSystem.timeOfArrival[2]=sc.nextInt();
+		programs.add(program1);
+		programs.add(program2);
+		programs.add(program3);
+		operatingSystem.programToprocess(programs);
+		
 }
 }
