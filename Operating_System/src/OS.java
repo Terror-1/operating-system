@@ -1,24 +1,30 @@
 import java.io.*;
 import java.util.*;
+
+import org.w3c.dom.css.Counter;
 public class OS {
-	codeParser parser;
-	systemCalls systemCalls;
 	Queue<process> readyQueue;
 	Queue<process> blockedQueue;
 	ArrayList<process> processes;
-	Set<String> ourInstruction = new HashSet<String>();
-	int[]timeOfArrival;
+	codeParser parser;
+	executer executer;
+	//int[]timeOfArrival;
+	private Hashtable<Integer, String> programs;
+	private Set<String> ourInstruction = new HashSet<String>();
 	private int timeSlice;
 	private int clk;
 	private int totaNumOfProcesses=3;
 	private int numOfFinshed=0;
+	private int Counter =0;
 	public OS() {
+
 		this.parser=new codeParser();
-		this.timeOfArrival=new int[totaNumOfProcesses];
+		//this.timeOfArrival=new int[totaNumOfProcesses];
+		this.programs=new Hashtable<>(); 
 		this.readyQueue = new LinkedList<>();
 		this.blockedQueue= new LinkedList<>();
 		this.processes=new ArrayList<>();
-		this.systemCalls=new systemCalls(blockedQueue , readyQueue);
+		this.executer= new executer(blockedQueue, readyQueue);
 		this.timeSlice=2;
 		this.clk=0;
 		this.ourInstruction.add("print");
@@ -31,24 +37,25 @@ public class OS {
 		
 		
 	}
-	public void programToprocess(ArrayList<String> programs) throws IOException {
-		for(int i=0;i<programs.size();i++) {
-			process p = new process(i,this.timeOfArrival[i], processStatus.NEW);
+	public void programToprocess(String program,int id) throws IOException {
+			process p = new process(id,this.clk, processStatus.READY);
+			this.readyQueue.add(p);
 			this.processes.add(p);
-			parser.parseInput(programs.get(i), p);
-			
-		}
-		this.scheduler();
+			parser.parseInput(programs.get(clk), p);
 	}
-	public void checkArrival() {
+	public void checkArrival() throws IOException {
 		
-		for(int i =0 ; i <this.processes.size();i++) {
+		if(programs.containsKey(clk)) {
+			programToprocess(programs.get(clk),Counter);
+			Counter++;
+			programs.remove(clk);
+		}
+	  /*for(int i =0 ; i <this.processes.size();i++) {
 			if ((this.processes.get(i).getTimeOfArrival()==clk)&&(this.processes.get(i).getaddedFlag()==false)) {
 				this.readyQueue.add(this.processes.get(i));
 			    this.processes.get(i).setaddedFlag(true);
-			//System.out.println("process "+this.processes.get(i).getPid() + "  moved to ready queue");
 			}
-		}
+		}*/
 	}
 	public void scheduler() throws IOException {
 		System.out.println("<<<  The scheduler starts  >>>");
@@ -65,7 +72,7 @@ public class OS {
 			  String temp1 = temp.instructions.peek().pop();
 			  if(temp1.equals("input")) {
 				  System.out.println("Process "+temp.getPid()+ " is taking input ");
-				  temp.instructions.peek().push(systemCalls.takeInput())	;	 
+				  temp.instructions.peek().push(executer.callTakeInput())	;	 
 				  }
 			  else {
 			  if(this.ourInstruction.contains(temp.instructions.peek().peek()))
@@ -73,17 +80,17 @@ public class OS {
 				  String temp2 = temp.instructions.peek().pop();
 				  if(temp2.equals("readFile")) {
 					  if(!temp.instructions.peek().isEmpty())
-					  temp.instructions.peek().push(systemCalls.executeSpecialInstruction(temp2, temp1, temp));}
+					  temp.instructions.peek().push(executer.executeSpecialInstruction(temp2, temp1, temp));}
 				  
 				  else {
-				  systemCalls.executeInstruction2(temp2,temp1,temp);
+				  executer.executeInstruction2(temp2,temp1,temp);
 				  if(temp.instructions.peek().isEmpty())
 					  temp.instructions.poll();
 				  }
 			  }else {
 				  String temp2 = temp.instructions.peek().pop();
 				  String temp3 = temp.instructions.peek().pop();
-				  systemCalls.executeInstruction3(temp3,temp2,temp1,temp);
+				  executer.executeInstruction3(temp3,temp2,temp1,temp);
 				  if(temp.instructions.peek().isEmpty())
 					  temp.instructions.poll();
 
@@ -155,19 +162,18 @@ public class OS {
 		String program1="src/Program_1.txt";
 		String program2="src/Program_2.txt";
 		String program3="src/Program_3.txt";
-		ArrayList<String> programs = new ArrayList<>();
+		//ArrayList<String> programs = new ArrayList<>();
 		System.out.println("please enter time slice value");
 		operatingSystem.setTimeSlice(sc.nextInt());
 		System.out.println("please enter time arrival of first program");
-		operatingSystem.timeOfArrival[0]=sc.nextInt();
+		operatingSystem.programs.put(sc.nextInt(), program1);
 		System.out.println("please enter time arrival of second program");
-		operatingSystem.timeOfArrival[1]=sc.nextInt();
+		operatingSystem.programs.put(sc.nextInt(), program2);
 		System.out.println("please enter time arrival of third program");
-		operatingSystem.timeOfArrival[2]=sc.nextInt();
-		programs.add(program1);
-		programs.add(program2);
-		programs.add(program3);
-		operatingSystem.programToprocess(programs);
-		
+		operatingSystem.programs.put(sc.nextInt(), program3);	
+		//programs.add(program1);
+		//programs.add(program2);
+		//programs.add(program3);
+		operatingSystem.scheduler();
 }
 }

@@ -3,66 +3,86 @@ import java.util.*;
 
 
 public class systemCalls {
-	codeParser cp;
-	mutexes mutex;
-	Queue<process> RQ ;
-	Queue<process> generalBlocked;
-	public systemCalls(Queue<process> blockedQueue ,Queue<process> readyQueue) {
-	this.cp=new codeParser();
-	generalBlocked = blockedQueue;
-	this.RQ=readyQueue;
-	this.mutex = new mutexes(generalBlocked , RQ);
+  
+	public systemCalls() {
 	}
-  public void executeInstruction2(String arg1,String arg2,process p) {
-	  switch(arg1) {
-	  case "print":  {
-		  System.out.println("process "+p.getPid()+" is performing a printing instruction of "+arg2);
-		  cp.print(arg2, p);
-		  break;}
-	  case "semWait": {
-		  System.out.println("process "+p.getPid()+" is performing a semWait instruction over "+arg2 );
-		  mutex.semWait(arg2, p);
-		  break;}
-	  case "semSignal" :{ 
-		  System.out.println("process "+p.getPid()+" is performing a semSignal instruction over "+arg2 );
-		  mutex.semSignal(arg2, p.getPid());
-		  break;}
-	  default :break;
-	  } 
+    public void print(String arg ,process p) {
+		if (p.variables.containsKey(arg)){
+			System.out.println(p.variables.get(arg)+"");
+		}
+		else {
+		System.out.println("printed value : "+arg+"");
+		  }
+	
+	}
+
+	public String readFile(String arg,process p)  {
+		String filepath;
+		if (p.variables.containsKey(arg))filepath=System.getProperty("user.dir")+"\\Src\\"+readFromMemory(arg, p)+".txt";
+		else filepath=arg;
+		File file = new File(filepath);
+		Scanner sc;
+		String st = "";
+		try {
+			sc = new Scanner(file);
+			while (sc.hasNextLine()) {
+				st+= sc.nextLine()+"\n";
+				
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println(" Warning!!! File not found 404 ");
+		}
+		return st;
+	}	
+	public void writeFile(String arg1, String arg2,process p) throws IOException {
+		String fileName;
+		if (p.variables.containsKey(arg1))fileName=readFromMemory(arg1, p);
+		else fileName=arg1;
+		String text;
+		if (p.variables.containsKey(arg2))text=readFromMemory(arg2, p);
+		else text=arg2;
+		String filePath=System.getProperty("user.dir")+"\\Src\\"; 
+		createFile(filePath,fileName);
+		FileWriter myWriter = new FileWriter(filePath+"\\"+fileName+".txt");
+		myWriter.write(text);
+		myWriter.close();
+		System.out.println("File created and writed on it");
+		
   }
-  public void executeInstruction3(String arg1,String arg2,String arg3,process p) throws IOException {
-	  switch(arg1) {
-	  case "assign" : {
-		  System.out.println("process "+p.getPid()+" is performing an assign instruction"  );
-		  cp.assign(arg2, arg3, p);
-		  break;}
-	  case "writeFile" : {
-	  System.out.println("process "+p.getPid()+" is performing a writeFile instruction ");
-	  cp.writeFile(arg2, arg3, p);
-	  break;
-	  }
-	  
-	  case "printFromTo" : {
-	  System.out.println("process "+p.getPid()+" is printing from "+ arg2 +" to "+arg3);
-	  cp.printFromTo(arg2, arg3, p);
-	  break;}
-	  default : break;
-	  }
-	    
-  }
-  public String executeSpecialInstruction(String arg1,String arg2,process p) throws IOException {
-	 System.out.println("process "+p.getPid()+" reading file "+arg2 );
-	 return cp.readFile(arg2, p);
-  }
-  public String takeInput() {
+	public static void createFile(String arg , String fileName) throws IOException {
+		File file = new File(arg+"\\"+fileName+".txt");
+		file.createNewFile();		
+	}
+	public void printFromTo(String x , String y,process p) {
+		int firstNumber;
+		int secondNumber;
+		if(p.variables.containsKey(x))firstNumber=Integer.parseInt(readFromMemory(x, p));
+		else firstNumber=Integer.parseInt(x);
+		if(p.variables.containsKey(y))secondNumber=Integer.parseInt(readFromMemory(y, p));
+		else secondNumber=Integer.parseInt(y);	
+		
+		if(firstNumber<secondNumber)swap(firstNumber, secondNumber);
+		
+		System.out.print("values between " +firstNumber + " and "+ secondNumber+" >>> ");
+		for (int i = firstNumber+1 ; i<secondNumber;i++) {
+			System.out.print(i+ " ");
+		}
+		System.out.println();
+	}
+    public String takeInput() {
 	  Scanner sc = new Scanner(System.in);
 	  System.out.println("Please enter a value");
 	  return sc.next();
   }
-  public void writeToMemory(String arg1, String arg2,process p) {
+    public void writeToMemory(String arg1, String arg2,process p) {
 	  p.variables.put(arg1, arg2);
   }
-  public String readFromMemory(String key,process p) {
+    public String readFromMemory(String key,process p) {
 	  return p.variables.getOrDefault(key,"Key not Found");
+  }
+    public static void swap(int x,int y) {
+	  int temp = x;
+	  x=y;
+	  y=temp;
   }
 }
