@@ -7,7 +7,7 @@ public class process {
 	Hashtable<String, String> variables;
 	Queue<Stack<String>> instructions;
 	public process(int pid ,int timeOfArival, processStatus e) {
-		this.pid=pid+1;
+		this.pid=pid;
 		this.instructions=new LinkedList<>();
 		this.timeOfArrival=timeOfArival;
 		this.currentStatus=e;

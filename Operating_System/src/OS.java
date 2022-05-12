@@ -6,7 +6,8 @@ public class OS {
 	ArrayList<process> processes;
 	codeParser parser;
 	executer executer;
-	int[]timeOfArrival;
+	private int Counter ;
+	private Hashtable<Integer, String> programs; //integer >> time of arrival -- string >> program src
 	private Set<String> ourInstruction = new HashSet<String>();
 	private int timeSlice;
 	private int clk;
@@ -15,7 +16,8 @@ public class OS {
 	public OS() {
 
 		this.parser=new codeParser();
-		this.timeOfArrival=new int[totaNumOfProcesses];
+		this.programs=new Hashtable<>(); 
+		this.Counter=1;
 		this.readyQueue = new LinkedList<>();
 		this.blockedQueue= new LinkedList<>();
 		this.processes=new ArrayList<>();
@@ -32,29 +34,24 @@ public class OS {
 		
 		
 	}
-	public void programToprocess(ArrayList<String> programs) throws IOException {
-		for(int i=0;i<programs.size();i++) {
-			process p = new process(i,this.timeOfArrival[i], processStatus.NEW);
-			this.processes.add(p);
-			parser.parseInput(programs.get(i), p);
-			
-		}
-		this.scheduler();
-	}
-	public void checkArrival() {
-		
-		for(int i =0 ; i <this.processes.size();i++) {
-			if ((this.processes.get(i).getTimeOfArrival()==clk)&&(this.processes.get(i).getaddedFlag()==false)) {
-				this.readyQueue.add(this.processes.get(i));
-			    this.processes.get(i).setaddedFlag(true);
-			}
+	public void programToprocess(String program,int id) throws IOException {
+		process p = new process(id,this.clk, processStatus.READY);
+		this.readyQueue.add(p);
+		this.processes.add(p);
+		parser.parseInput(programs.get(clk), p);
+		System.out.println("--"+program.substring(4,program.length()-4) + " becomes a process--");
+}
+	public void checkArrival() throws IOException {	
+		if(programs.containsKey(clk)) {
+			programToprocess(programs.get(clk),Counter);
+			programs.remove(clk);
+			Counter++;
 		}
 	}
 	public void scheduler() throws IOException {
 		System.out.println("<<<  The scheduler starts  >>>");
 		while(this.numOfFinshed!=totaNumOfProcesses) {
 		checkArrival();
-
 		if(!readyQueue.isEmpty()) {
 		  process temp = this.readyQueue.poll();
 		  System.out.println("process "+temp.getPid()+" is chosen from readyQueue by the scheduler  ");
@@ -155,19 +152,14 @@ public class OS {
 		String program1="src/Program_1.txt";
 		String program2="src/Program_2.txt";
 		String program3="src/Program_3.txt";
-		ArrayList<String> programs = new ArrayList<>();
 		System.out.println("please enter time slice value");
 		operatingSystem.setTimeSlice(sc.nextInt());
 		System.out.println("please enter time arrival of first program");
-		operatingSystem.timeOfArrival[0]=sc.nextInt();
+		operatingSystem.programs.put(sc.nextInt(), program1);
 		System.out.println("please enter time arrival of second program");
-		operatingSystem.timeOfArrival[1]=sc.nextInt();
+		operatingSystem.programs.put(sc.nextInt(), program2);	
 		System.out.println("please enter time arrival of third program");
-		operatingSystem.timeOfArrival[2]=sc.nextInt();
-		programs.add(program1);
-		programs.add(program2);
-		programs.add(program3);
-		operatingSystem.programToprocess(programs);
-		
-}
+		operatingSystem.programs.put(sc.nextInt(), program3);		
+		operatingSystem.scheduler();
+	}
 }

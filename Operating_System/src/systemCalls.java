@@ -1,7 +1,6 @@
 import java.io.*;
 import java.util.*;
 
-
 public class systemCalls {
   
 	public systemCalls() {
@@ -15,7 +14,6 @@ public class systemCalls {
 		  }
 	
 	}
-
 	public String readFile(String arg,process p)  {
 		String filepath;
 		if (p.variables.containsKey(arg))filepath=System.getProperty("user.dir")+"\\Src\\"+readFromMemory(arg, p)+".txt";
@@ -31,9 +29,11 @@ public class systemCalls {
 			}
 		} catch (FileNotFoundException e) {
 			System.out.println(" Warning!!! File not found 404 ");
+			st+="File not Found";
 		}
 		return st;
-	}	
+	}
+	
 	public void writeFile(String arg1, String arg2,process p) throws IOException {
 		String fileName;
 		if (p.variables.containsKey(arg1))fileName=readFromMemory(arg1, p);
