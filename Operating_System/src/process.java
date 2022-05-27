@@ -1,27 +1,32 @@
 import java.util.*;
 public class process {
-    private int pid;
 	private int timeOfArrival;
-	private processStatus currentStatus;
 	private boolean addedFlag=false;
 	Hashtable<String, String> variables;
 	Queue<Stack<String>> instructions;
+	private int instCount;
+	private PCB pcb;
+	
+	
 	public process(int pid ,int timeOfArival, processStatus e) {
-		this.pid=pid;
+		this.pcb = new PCB(pid,e);
 		this.instructions=new LinkedList<>();
 		this.timeOfArrival=timeOfArival;
-		this.currentStatus=e;
 		this.variables=new Hashtable<>();	
 	}
+	public PCB getPcb() {
+		return pcb;
+	}
+	public void setPcb(PCB pcb) {
+		this.pcb = pcb;
+	}
 	public String toString() {
-		return "process "+this.pid;
+		return "process "+this.pcb.getId();
 	}
 	public int getPid() {
-		return pid;
+		return this.pcb.getId();
 	}
-	public void setPid(int pid) {
-		this.pid = pid;
-	}
+	
 	public boolean getaddedFlag() {
 		return addedFlag;
 	}
@@ -36,9 +41,19 @@ public class process {
 	}
 	
 	public processStatus getCurrentStatus() {
-		return currentStatus;
+		return this.pcb.getState();
 	}
 	public void setCurrentStatus(processStatus currentStatus) {
-		this.currentStatus = currentStatus;
+		this.pcb.setState(currentStatus);
 	}
+	public int getProcessLengthInMemory() {
+		return (3+this.instCount+4);
+	}
+	public int getInstCount() {
+		return instCount;
+	}
+	public void setInstCount(int instCount) {
+		this.instCount = instCount;
+	}
+	
 }

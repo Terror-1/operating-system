@@ -1,11 +1,4 @@
-/OS.class
-/Program_1.txt
-/Program_2.txt
-/Program_3.txt
-/codeParser.class
-/executer.class
-/mutexes.class
-/process.class
-/processStatus.class
-/systemCalls.class
-/PCB.class
+/memory.class
+/disk.class
+/pair.class
+/Pair.class
