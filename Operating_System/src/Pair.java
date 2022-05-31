@@ -1,30 +1,30 @@
 public class Pair {
-	private int x;
-	private int y;
+	private String x;
+	private String y;
 
-	public Pair(int x, int y) {
+	public Pair(String x, String y) {
 		this.x = x;
 		this.y = y;
 	}
 
-	public int getLength() {
-		return (this.y - this.x);
-	}
 
-	public int getX() {
+	public String getX() {
 		return x;
 	}
 
-	public void setX(int x) {
+	public void setX(String x) {
 		this.x = x;
 	}
 
-	public int getY() {
+	public String getY() {
 		return y;
 	}
 
-	public void setY(int y) {
+	public void setY(String y) {
 		this.y = y;
+	}
+	public String toString() {
+		return "Variable name is "+this.x+" value is "+this.y;
 	}
 
 }

@@ -90,9 +90,10 @@ public class OS {
 		memory.getMemory()[StartBound + pc_offset] = pcb.getPc();
 		memory.getMemory()[StartBound + mem_bound_offset] = "Start Bound is " + pcb.getStartBound() + " End Bound is "
 				+ pcb.getEndBound();
-		memory.getMemory()[StartBound + var_offset] = "empty variable space";
-		memory.getMemory()[StartBound + var_offset + 1] = "empty variable space";
-		memory.getMemory()[StartBound + var_offset + 2] = "empty variable spcae";
+		memory.getMemory()[StartBound + var_offset] = new Pair("Empty", "Null");
+		memory.getMemory()[StartBound + var_offset + 1] = new Pair("Empty","Null" );
+		memory.getMemory()[StartBound + var_offset + 2] = new Pair("Empty","Null");;
+		
 	}
 
 	public void checkArrival() throws IOException {
@@ -131,11 +132,11 @@ public class OS {
 							String temp2 = current.pop();
 							if (temp2.equals("readFile")) {
 								if (!current.peek().isEmpty())
-									current.push(executer.executeSpecialInstruction(temp2, temp1, temp));
+									current.push(executer.executeSpecialInstruction(temp2, temp1, temp,pos+var_offset));
 							}
 
 							else {
-								executer.executeInstruction2(temp2, temp1, temp);
+								executer.executeInstruction2(temp2, temp1, temp,pos+var_offset);
 								if (current.isEmpty()) {
 									pc++;
 									temp.getPcb().setPc(pc);
@@ -146,7 +147,7 @@ public class OS {
 						} else {
 							String temp2 = current.pop();
 							String temp3 = current.pop();
-							executer.executeInstruction3(temp3, temp2, temp1, temp);
+							executer.executeInstruction3(temp3, temp2, temp1, temp,pos+var_offset);
 							if (current.isEmpty()) {
 								pc++;
 								temp.getPcb().setPc(pc);
@@ -156,7 +157,7 @@ public class OS {
 
 						}
 					}
-					//this.memory.print();
+					this.memory.print();
 					clk++;
 					if (this.memory.getMemory()[pc+inst_offset+pos]==null) {
 						pc = Integer.MAX_VALUE;
@@ -171,7 +172,6 @@ public class OS {
 
 					System.out.println("readyQueue > " + this.readyQueue);
 					System.out.println("blocedQueue > " + this.blockedQueue);
-					this.memory.print();
 					System.out.println("*** Clock Time is " + (clk - 1) + " ***");
 					System.out.println("--------------------------------------------------------");
 

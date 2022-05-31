@@ -1,18 +1,23 @@
-import java.util.*;
 public class process {
 	private int pid;
 	private int timeOfArrival;
 	private boolean addedFlag=false;
-	Hashtable<String, String> variables;
 	private int instCount;
+	private int spot;
 	PCB pcb;
 	
 	
 	public process(int pid ,int timeOfArival,PCB pcb) {
+		this.spot=4;
 		this.pid=pid;
 		this.pcb =pcb;
 		this.timeOfArrival=timeOfArival;
-		this.variables=new Hashtable<>();	
+	}
+	public int getSpot() {
+		return spot;
+	}
+	public void setSpot(int spot) {
+		this.spot = spot;
 	}
 	public int getPid() {
 		return this.pid;

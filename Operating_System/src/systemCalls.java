@@ -2,22 +2,35 @@ import java.io.*;
 import java.util.*;
 
 public class systemCalls {
-  
+    String readFromMemory="";
 	public systemCalls() {
 	}
-    public void print(String arg ,process p) {
-		if (p.variables.containsKey(arg)){
-			System.out.println(p.variables.get(arg)+"");
+	  public boolean contains(int varIdx ,String arg, memory memory) {
+			for (int i=varIdx ; i < varIdx+3 ; i++) {
+				String n[] = (memory.getMemory()[i]+"").split(" ");
+				Pair temp = new Pair(n[3],n[n.length-1]);
+				if (temp.getX().equals(arg)) {
+					readFromMemory=temp.getY();
+					return true;
+				}
+			}
+
+			return false;
+		}
+    public void print(String arg ,int varIdx,memory memory) {
+		if (this.contains(varIdx, arg, memory)){
+			System.out.println(readFromMemory+"");
 		}
 		else {
 		System.out.println("printed value : "+arg+"");
 		  }
 	
 	}
-	public String readFile(String arg,process p)  {
+	public String readFile(String arg,int varIdx ,memory memory)  {
 		String filepath;
-		if (p.variables.containsKey(arg))filepath=System.getProperty("user.dir")+"\\Src\\"+readFromMemory(arg, p)+".txt";
+		if (this.contains(varIdx, arg, memory))filepath=System.getProperty("user.dir")+"\\Src\\"+readFromMemory+".txt";
 		else filepath=arg;
+		System.err.println(readFromMemory);
 		File file = new File(filepath);
 		Scanner sc;
 		String st = "";
@@ -34,12 +47,12 @@ public class systemCalls {
 		return st;
 	}
 	
-	public void writeFile(String arg1, String arg2,process p) throws IOException {
+	public void writeFile(String arg1, String arg2,int varIdx,memory memory) throws IOException {
 		String fileName;
-		if (p.variables.containsKey(arg1))fileName=readFromMemory(arg1, p);
+		if (this.contains(varIdx, arg1, memory))fileName=readFromMemory;
 		else fileName=arg1;
 		String text;
-		if (p.variables.containsKey(arg2))text=readFromMemory(arg2, p);
+		if (this.contains(varIdx, arg2, memory))text=readFromMemory;
 		else text=arg2;
 		String filePath=System.getProperty("user.dir")+"\\Src\\"; 
 		createFile(filePath,fileName);
@@ -77,12 +90,13 @@ public class systemCalls {
 		File file = new File(arg+"\\"+fileName+".txt");
 		file.createNewFile();		
 	}
-	public void printFromTo(String x , String y,process p) {
+	public void printFromTo(String x , String y,int varIdx,memory memory) {
+		memory.print();
 		int firstNumber;
 		int secondNumber;
-		if(p.variables.containsKey(x))firstNumber=Integer.parseInt(readFromMemory(x, p));
+		if(this.contains(varIdx,x, memory))firstNumber=Integer.parseInt(readFromMemory);
 		else firstNumber=Integer.parseInt(x);
-		if(p.variables.containsKey(y))secondNumber=Integer.parseInt(readFromMemory(y, p));
+		if(this.contains(varIdx, y, memory))secondNumber=Integer.parseInt(readFromMemory);
 		else secondNumber=Integer.parseInt(y);	
 		
 		if(firstNumber<secondNumber)swap(firstNumber, secondNumber);
@@ -93,16 +107,13 @@ public class systemCalls {
 		}
 		System.out.println();
 	}
+	public void writeToMemory(Pair arg, int varIdx , memory memory) {
+		memory.getMemory()[varIdx]=arg;
+	}
     public String takeInput() {
 	  Scanner sc = new Scanner(System.in);
 	  System.out.println("Please enter a value");
 	  return sc.next();
-  }
-    public void writeToMemory(String arg1, String arg2,process p) {
-	  p.variables.put(arg1, arg2);
-  }
-    public String readFromMemory(String key,process p) {
-	  return p.variables.getOrDefault(key,"Key not Found");
   }
     public static void swap(int x,int y) {
 	  int temp = x;

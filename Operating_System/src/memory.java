@@ -19,8 +19,4 @@ public class memory {
     public boolean isNotFull() {
     	return this.getMemory()[0]!=null ||this.getMemory()[20]!=null ;
 	}
-    
-
-
-
 }
