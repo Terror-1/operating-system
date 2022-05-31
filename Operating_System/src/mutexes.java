@@ -10,8 +10,9 @@ public class mutexes {
 	private int currentOwner[];
 	Queue<process> generalBlocked;
 	Queue<process> RQ;
+	memory memory;
 	
-	public mutexes(Queue<process> blockedQueue ,Queue<process> readyQueue) {
+	public mutexes(Queue<process> blockedQueue ,Queue<process> readyQueue,memory memory) {
 		this.blockedOfFile= new LinkedList<>();
 		this.blockedOfUserInput=new LinkedList<>();
 		this.blockedOfUserOutput= new LinkedList<>();
@@ -24,6 +25,7 @@ public class mutexes {
 		//1 --> process running over userOutput
 		//2 -->process running over File
 		this.generalBlocked=blockedQueue;
+		this.memory=memory;
 				
 	}
 	public void semWait(String arg, process p) {
@@ -35,6 +37,7 @@ public class mutexes {
 				System.out.println("process "+p.getPid()+" is blocked over user Input");
 				System.out.println("processes that is blocked on userInput >" + this.blockedOfUserInput);
 				p.setCurrentStatus(processStatus.BLOCKED);
+				memory.getMemory()[p.getPcb().getStartBound()+1]=processStatus.BLOCKED;
 			}
 			else {
 				currentOwner[0]=p.getPid();
@@ -51,6 +54,8 @@ public class mutexes {
 				System.out.println("process "+p.getPid()+" is blocked over user output");
 				System.out.println("processes that is blocked on userOutput >" + this.blockedOfUserOutput);
 				p.setCurrentStatus(processStatus.BLOCKED);
+				memory.getMemory()[p.getPcb().getStartBound()+1]=processStatus.BLOCKED;
+
 				
 			}
 			else {
@@ -67,6 +72,8 @@ public class mutexes {
 				System.out.println("process "+p.getPid()+" is blocked over file");
 				System.out.println("processes that is blocked on File >" + this.blockedOfFile);
 				p.setCurrentStatus(processStatus.BLOCKED);
+				memory.getMemory()[p.getPcb().getStartBound()+1]=processStatus.BLOCKED;
+
 			}
 			else {
 				currentOwner[2]=p.getPid();

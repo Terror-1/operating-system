@@ -5,8 +5,8 @@ public class PCB {
     private int startBound;
     private int endBound;
 	public PCB(int id , processStatus state) {
-		this.id=id;
 		this.pc=1;
+		this.id=id;
 		this.state=state;
 
  	}

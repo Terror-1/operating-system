@@ -3,19 +3,24 @@ public class process {
 	private int timeOfArrival;
 	private boolean addedFlag=false;
 	Hashtable<String, String> variables;
-	Queue<Stack<String>> instructions;
 	private int instCount;
 	private PCB pcb;
-	
+	private boolean isFound = false;
 	
 	public process(int pid ,int timeOfArival, processStatus e) {
 		this.pcb = new PCB(pid,e);
-		this.instructions=new LinkedList<>();
 		this.timeOfArrival=timeOfArival;
 		this.variables=new Hashtable<>();	
 	}
 	public PCB getPcb() {
 		return pcb;
+	}
+	
+	public boolean isFound() {
+		return isFound;
+	}
+	public void setFound(boolean isFound) {
+		this.isFound = isFound;
 	}
 	public void setPcb(PCB pcb) {
 		this.pcb = pcb;

@@ -49,6 +49,16 @@ public class systemCalls {
 		System.out.println("File created and writed on it");
 		
   }
+	public void writeFile(String arg1, String arg2) throws IOException {
+		String fileName=arg1;
+		String text=arg2;
+		String filePath=System.getProperty("user.dir")+"\\Src\\"; 
+		createFile(filePath,fileName);
+		FileWriter myWriter = new FileWriter(filePath+"\\"+fileName+".txt");
+		myWriter.write(text);
+		myWriter.close();
+		
+  }
 	public static void createFile(String arg , String fileName) throws IOException {
 		File file = new File(arg+"\\"+fileName+".txt");
 		file.createNewFile();		

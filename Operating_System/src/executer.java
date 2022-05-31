@@ -4,8 +4,8 @@ import java.util.Queue;
 public class executer {
 	systemCalls systemCalls ;
 	mutexes mutex ;
-	public executer(Queue<process> blockedQueue ,Queue<process> readyQueue) {
-		this.mutex=new mutexes(blockedQueue, readyQueue);
+	public executer(Queue<process> blockedQueue ,Queue<process> readyQueue,memory memory) {
+		this.mutex=new mutexes(blockedQueue, readyQueue,memory);
 		this.systemCalls = new systemCalls();
 	}
 	  public void executeInstruction2(String arg1,String arg2,process p) {
