@@ -1,37 +1,28 @@
 import java.util.*;
 public class process {
+	private int pid;
 	private int timeOfArrival;
 	private boolean addedFlag=false;
 	Hashtable<String, String> variables;
 	private int instCount;
-	private PCB pcb;
-	private boolean isFound = false;
+	PCB pcb;
 	
-	public process(int pid ,int timeOfArival, processStatus e) {
-		this.pcb = new PCB(pid,e);
+	
+	public process(int pid ,int timeOfArival,PCB pcb) {
+		this.pid=pid;
+		this.pcb =pcb;
 		this.timeOfArrival=timeOfArival;
 		this.variables=new Hashtable<>();	
+	}
+	public int getPid() {
+		return this.pid;
+	}
+	public String toString() {
+		return "Process "+this.pid;
 	}
 	public PCB getPcb() {
 		return pcb;
 	}
-	
-	public boolean isFound() {
-		return isFound;
-	}
-	public void setFound(boolean isFound) {
-		this.isFound = isFound;
-	}
-	public void setPcb(PCB pcb) {
-		this.pcb = pcb;
-	}
-	public String toString() {
-		return "process "+this.pcb.getId();
-	}
-	public int getPid() {
-		return this.pcb.getId();
-	}
-	
 	public boolean getaddedFlag() {
 		return addedFlag;
 	}
@@ -43,16 +34,6 @@ public class process {
 	}
 	public void setTimeOfArrival(int timeOfArrival) {
 		this.timeOfArrival = timeOfArrival;
-	}
-	
-	public processStatus getCurrentStatus() {
-		return this.pcb.getState();
-	}
-	public void setCurrentStatus(processStatus currentStatus) {
-		this.pcb.setState(currentStatus);
-	}
-	public int getProcessLengthInMemory() {
-		return (3+this.instCount+4);
 	}
 	public int getInstCount() {
 		return instCount;

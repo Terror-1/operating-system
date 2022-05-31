@@ -1,18 +1,19 @@
 import java.io.*;
 import java.util.*;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
+
 public class codeParser {
 
-	public void parseInput(String arg,process p,memory memory) throws FileNotFoundException {
+	public void parseInput(String arg,PCB pcb,memory memory) throws FileNotFoundException {
 		// convert the the program into parse tree stored in stack of the queue
 		File file = new File(arg);
 		Scanner sc = new Scanner(file);
 		String st;
 		////////////////////////should be removed//////////////////////
 		
-		int counter=p.getPcb().getStartBound()+7;
+		int counter=pcb.getStartBound()+7;
 		while(sc.hasNext()) {
-			int instCount=0;
 			Stack<String> temp = new Stack<>();
 			st= sc.nextLine();
 			String stringBuilder[] = st.split(" ");
@@ -20,24 +21,22 @@ public class codeParser {
 				temp.push(stringBuilder[i]);
 			}
 			memory.getMemory()[counter]=temp;
-			instCount++;
 			counter++;
-			p.setInstCount(instCount);
-			//p.instructions.add(temp);	
+		
 		}
 			
 			
 		
 		
 	}
-	public void parseInputString(String arg,process p,memory memory) throws FileNotFoundException {
+	public void parseInputString(String arg,int loadPos,memory memory) throws FileNotFoundException {
 		// convert the the program into parse tree stored in stack of the queue
 		File file = new File(arg);
 		Scanner sc = new Scanner(file);
 		String st;		
-		int counter=p.getPcb().getStartBound();
+		int counter=loadPos;
 		while(sc.hasNext()) {
-			if (counter >p.getPcb().getStartBound()+6) {
+			if (counter >loadPos+6) {
 				Stack<String> temp = new Stack<>();
 				st= sc.nextLine();
 				String stringBuilder[] = st.split(" ");
@@ -47,12 +46,19 @@ public class codeParser {
 				memory.getMemory()[counter]=temp;
 			}
 		
-			else if (counter==p.getPcb().getStartBound()+1)  {
+			else if (counter==loadPos+1)  {
 				st=sc.nextLine();
-				memory.getMemory()[counter]=processStatus.READY;
+				if (st.equals("STATUS IS READY")){
+					memory.getMemory()[counter]=processStatus.READY;
+				}
+				else if (st.equals("STATUS IS BLOCKED") )memory.getMemory()[counter]=processStatus.BLOCKED;
 			}
-			else if (counter==p.getPcb().getStartBound()||counter==p.getPcb().getStartBound()+2){
+			else if (counter==loadPos||counter==loadPos+2){
 				st=sc.nextLine();
+				if(st.equals(null)) {
+					this.isEmpty(loadPos,memory);
+					break;
+				}
 				memory.getMemory()[counter]=Integer.parseInt(st);
 			}
 			else {
@@ -62,10 +68,16 @@ public class codeParser {
 			counter++;
 			
 		}
+		
 			
 			
 		
 		
+	}
+	public void isEmpty(int start , memory memory) {
+		for (int i=start ; i<start+20;i++) {
+			memory.getMemory()[i]=null;
+		}
 	}
 
 }

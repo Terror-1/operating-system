@@ -1,11 +1,11 @@
 2
-STATUS IS READY 
-2
+STATUS IS BLOCKED
+1
 Start Bound is 20 End Bound is 39
 empty variable space
 empty variable space
 empty variable spcae
-[]
+
 assign a input 
 assign b input 
 semSignal userInput 

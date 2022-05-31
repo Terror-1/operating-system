@@ -59,6 +59,20 @@ public class systemCalls {
 		myWriter.close();
 		
   }
+	public void EmptyDisk() throws IOException {
+		String fileName="Disk";
+		String Empty="";
+		for (int i=0 ; i<20 ; i++) {
+			Empty+="null" +"\n";
+		}
+		String text=Empty;
+		String filePath=System.getProperty("user.dir")+"\\Src\\"; 
+		createFile(filePath,fileName);
+		FileWriter myWriter = new FileWriter(filePath+"\\"+fileName+".txt");
+		myWriter.write(text);
+		myWriter.close();
+		
+  }
 	public static void createFile(String arg , String fileName) throws IOException {
 		File file = new File(arg+"\\"+fileName+".txt");
 		file.createNewFile();		

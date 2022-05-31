@@ -36,7 +36,7 @@ public class mutexes {
 				this.generalBlocked.add(p);
 				System.out.println("process "+p.getPid()+" is blocked over user Input");
 				System.out.println("processes that is blocked on userInput >" + this.blockedOfUserInput);
-				p.setCurrentStatus(processStatus.BLOCKED);
+				p.getPcb().setState(processStatus.BLOCKED);
 				memory.getMemory()[p.getPcb().getStartBound()+1]=processStatus.BLOCKED;
 			}
 			else {
@@ -53,7 +53,7 @@ public class mutexes {
 				this.generalBlocked.add(p);
 				System.out.println("process "+p.getPid()+" is blocked over user output");
 				System.out.println("processes that is blocked on userOutput >" + this.blockedOfUserOutput);
-				p.setCurrentStatus(processStatus.BLOCKED);
+				p.getPcb().setState(processStatus.BLOCKED);
 				memory.getMemory()[p.getPcb().getStartBound()+1]=processStatus.BLOCKED;
 
 				
@@ -71,7 +71,7 @@ public class mutexes {
 				this.generalBlocked.add(p);
 				System.out.println("process "+p.getPid()+" is blocked over file");
 				System.out.println("processes that is blocked on File >" + this.blockedOfFile);
-				p.setCurrentStatus(processStatus.BLOCKED);
+				p.getPcb().setState(processStatus.BLOCKED);
 				memory.getMemory()[p.getPcb().getStartBound()+1]=processStatus.BLOCKED;
 
 			}
