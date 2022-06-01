@@ -25,3 +25,6 @@ This project is divided to section , First section is to build an interpreter to
 - understand the concept of OS
 - Learn the process of the simulation of the processor
 - Learn how to work together as a team on GitHub.
+
+## First phase
+## Second phase
