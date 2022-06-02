@@ -11,7 +11,7 @@ public class memory {
 		return memory;
 	}
 	public void print() {
-		System.err.println(Arrays.toString(memory));
+		System.out.println(Arrays.toString(memory));
 	}
     public boolean isFull() {
     	return this.getMemory()[0]!=null && this.getMemory()[20]!=null ;

@@ -1,1 +1,16 @@
-EMPTY
+3
+STATUS IS READY
+0
+Start Bound is 0 End Bound is 19
+Variable name is Empty value is Null
+Variable name is Empty value is Null
+Variable name is Empty value is Null
+semWait userInput 
+assign a input 
+semSignal userInput 
+semWait file 
+assign b readFile a 
+semSignal file 
+semWait userOutput 
+print b 
+semSignal userOutput 

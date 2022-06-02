@@ -18,8 +18,9 @@ public class OS {
 	memory memory;
 	systemCalls tempCalls;
 	private int globalPointer = 0;
-	private boolean EmptyDisk=false;
-	private final int id_offset = 0,pc_offset = 2,state_offset = 1,mem_bound_offset = 3,var_offset = 4,inst_offset = 7;
+	private boolean EmptyDisk = false;
+	private final int id_offset = 0, pc_offset = 2, state_offset = 1, mem_bound_offset = 3, var_offset = 4,
+			inst_offset = 7;
 
 	public OS() {
 
@@ -52,21 +53,21 @@ public class OS {
 		// check for place to insert in
 		if (this.memory.getMemory()[0] == null) {
 			endBound = 19;
-			globalPointer=20;
+			globalPointer = 20;
 
 		} else if (this.memory.getMemory()[20] == null) {
 			startBound = 20;
 			endBound = 39;
-			globalPointer=Integer.MAX_VALUE;
+			globalPointer = Integer.MAX_VALUE;
 		}
 		// swap one of the processes
 		else {
 			String toDisk = unloadFromMemory();
 			this.tempCalls.writeFile("Disk", toDisk);
-			this.EmptyDisk=false;
+			this.EmptyDisk = false;
 			startBound = globalPointer;
 			endBound = globalPointer + 19;
-			globalPointer=Integer.MAX_VALUE;
+			globalPointer = Integer.MAX_VALUE;
 
 		}
 		pcb.setStartBound(startBound);
@@ -91,9 +92,10 @@ public class OS {
 		memory.getMemory()[StartBound + mem_bound_offset] = "Start Bound is " + pcb.getStartBound() + " End Bound is "
 				+ pcb.getEndBound();
 		memory.getMemory()[StartBound + var_offset] = new Pair("Empty", "Null");
-		memory.getMemory()[StartBound + var_offset + 1] = new Pair("Empty","Null" );
-		memory.getMemory()[StartBound + var_offset + 2] = new Pair("Empty","Null");;
-		
+		memory.getMemory()[StartBound + var_offset + 1] = new Pair("Empty", "Null");
+		memory.getMemory()[StartBound + var_offset + 2] = new Pair("Empty", "Null");
+		;
+
 	}
 
 	public void checkArrival() throws IOException {
@@ -111,18 +113,19 @@ public class OS {
 			if (!readyQueue.isEmpty()) {
 				process temp = this.readyQueue.poll();
 				boolean found = this.isInMemory(temp);
-				if(!found) swap();
+				if (!found)
+					swap();
 				System.out.println("process " + temp.getPid() + " is chosen from readyQueue by the scheduler  ");
 				int pos = this.getPos(temp);
 				temp.pcb.setState(processStatus.Running);
-				this.memory.getMemory()[pos+state_offset] = processStatus.Running;
-				int pc=0;
-				for (int i = 0; (i < timeSlice) && (!temp.pcb.getState().equals(processStatus.FINISHED))&& (!temp.pcb.getState().equals(processStatus.BLOCKED)); i++) {
+				this.memory.getMemory()[pos + state_offset] = processStatus.Running;
+				int pc = 0;
+				for (int i = 0; (i < timeSlice) && (!temp.pcb.getState().equals(processStatus.FINISHED))
+						&& (!temp.pcb.getState().equals(processStatus.BLOCKED)); i++) {
 					System.out.println("process " + temp.getPid() + " is currently executing");
-					pc = Integer.parseInt(this.memory.getMemory()[pos+pc_offset]+"");
+					pc = Integer.parseInt(this.memory.getMemory()[pos + pc_offset] + "");
 					checkArrival();
-					//this.memory.print();
-					Stack<String> current = (Stack<String>) (this.memory.getMemory()[pc + inst_offset+pos]);
+					Stack<String> current = (Stack<String>) (this.memory.getMemory()[pc + inst_offset + pos]);
 					String temp1 = current.pop();
 					if (temp1.equals("input")) {
 						System.out.println("Process " + temp.getPid() + " is taking input ");
@@ -132,37 +135,37 @@ public class OS {
 							String temp2 = current.pop();
 							if (temp2.equals("readFile")) {
 								if (!current.peek().isEmpty())
-									current.push(executer.executeSpecialInstruction(temp2, temp1, temp,pos+var_offset));
+									current.push(
+											executer.executeSpecialInstruction(temp2, temp1, temp, pos + var_offset));
 							}
 
 							else {
-								executer.executeInstruction2(temp2, temp1, temp,pos+var_offset);
+								executer.executeInstruction2(temp2, temp1, temp, pos + var_offset);
 								if (current.isEmpty()) {
 									pc++;
 									temp.getPcb().setPc(pc);
-									this.memory.getMemory()[pos+pc_offset] = pc;
+									this.memory.getMemory()[pos + pc_offset] = pc;
 								}
 
 							}
 						} else {
 							String temp2 = current.pop();
 							String temp3 = current.pop();
-							executer.executeInstruction3(temp3, temp2, temp1, temp,pos+var_offset);
+							executer.executeInstruction3(temp3, temp2, temp1, temp, pos + var_offset);
 							if (current.isEmpty()) {
 								pc++;
 								temp.getPcb().setPc(pc);
-								this.memory.getMemory()[pos+pc_offset] = pc;
+								this.memory.getMemory()[pos + pc_offset] = pc;
 
 							}
 
 						}
 					}
-					this.memory.print();
 					clk++;
-					if (this.memory.getMemory()[pc+inst_offset+pos]==null) {
+					if (this.memory.getMemory()[pc + inst_offset + pos] == null) {
 						pc = Integer.MAX_VALUE;
 					}
-					if (pc==Integer.MAX_VALUE) {
+					if (pc == Integer.MAX_VALUE) {
 						this.numOfFinshed++;
 						temp.getPcb().setState(processStatus.FINISHED);
 						this.unloadFinished(temp);
@@ -172,14 +175,16 @@ public class OS {
 
 					System.out.println("readyQueue > " + this.readyQueue);
 					System.out.println("blocedQueue > " + this.blockedQueue);
+					this.memory.print();
 					System.out.println("*** Clock Time is " + (clk - 1) + " ***");
+				
 					System.out.println("--------------------------------------------------------");
 
 				}
-				if (!temp.getPcb().getState().equals(processStatus.BLOCKED) &&!(pc==Integer.MAX_VALUE) ) {
+				if (!temp.getPcb().getState().equals(processStatus.BLOCKED) && !(pc == Integer.MAX_VALUE)) {
 					this.readyQueue.add(temp);
 					temp.getPcb().setState(processStatus.READY);
-					this.memory.getMemory()[pos+state_offset] = processStatus.READY;
+					this.memory.getMemory()[pos + state_offset] = processStatus.READY;
 					System.out.println("process " + temp.getPid() + " return back from running to ready queue");
 				}
 			}
@@ -195,12 +200,12 @@ public class OS {
 			}
 		}
 		System.out.println("<<<  All the processes have finished  >>>");
-		this.memory.print();
 	}
-	
-    public boolean isInMemory(process p) {
-    	return inMem.contains(p.getPid());
-    }
+
+	public boolean isInMemory(process p) {
+		return inMem.contains(p.getPid());
+	}
+
 	public void swap() throws IOException {
 		if (this.memory.isFull()) {
 			this.Reload();
@@ -214,73 +219,83 @@ public class OS {
 		String toDisk = unloadFromMemory();
 		load(globalPointer);
 		this.tempCalls.writeFile("Disk", toDisk);
-		this.EmptyDisk=false;
+		this.EmptyDisk = false;
 		System.out.println("************ Process " + toDisk.charAt(0) + " is written on Disk ************ ");
 
 	}
 
 	public void load(int loadPos) throws IOException {
-		int endBound = loadPos+19;
-		if(!EmptyDisk) {
-		this.parser.parseInputString("src/Disk.txt", loadPos, memory);
-		this.memory.getMemory()[loadPos+3] = "Start Bound is " + loadPos
-				+ " End Bound is " + endBound;
-		inMem.add(Integer.parseInt(this.memory.getMemory()[loadPos]+""));
-	
-		
-		System.out.println("************ Process " + Integer.parseInt(this.memory.getMemory()[loadPos]+"") + " is loaded to Memory ************ ");
-		this.globalPointer=Integer.MAX_VALUE;
-		this.tempCalls.writeFile("Disk", "EMPTY");
-		this.EmptyDisk=true;
+		int endBound = loadPos + 19;
+		if (!EmptyDisk) {
+			this.parser.parseInputString("src/Disk.txt", loadPos, memory);
+			this.memory.getMemory()[loadPos + 3] = "Start Bound is " + loadPos + " End Bound is " + endBound;
+			inMem.add(Integer.parseInt(this.memory.getMemory()[loadPos] + ""));
+
+			System.out.println("************ Process " + Integer.parseInt(this.memory.getMemory()[loadPos] + "")
+					+ " is loaded to Memory ************ ");
+			this.globalPointer = Integer.MAX_VALUE;
+			this.tempCalls.writeFile("Disk", "EMPTY");
+			this.EmptyDisk = true;
 		}
 	}
 
-	public String unloadFromMemory() throws IOException{
-		String pushDisk ="";
-		int startBound=0;
-		if (!this.memory.getMemory()[state_offset].equals(processStatus.Running))  startBound=0;
-		else startBound = 20;
-		inMem.remove(Integer.parseInt(this.memory.getMemory()[startBound]+""));
-		System.out.println("************ Process "+this.memory.getMemory()[startBound+id_offset]+" is swaped from  Memory ************");
-		for (int i = startBound; i<= startBound+19&&this.memory.getMemory()[i]!=null; i++) {
-					if (i>=startBound+inst_offset) {
-						@SuppressWarnings("unchecked")
-						Stack<String> y = (Stack<String>)this.memory.getMemory()[i];
-						pushDisk+=printStack(y);
-					}
-					else {
-						if (i==startBound+state_offset) {
-							if(this.memory.getMemory()[i].equals(processStatus.READY))pushDisk+="STATUS IS READY"+"\n";
-							else pushDisk+="STATUS IS BLOCKED"+"\n";
-						}
-						else pushDisk+= this.memory.getMemory()[i]+"\n";
-					}
-					
-					this.memory.getMemory()[i]=null;
-				}
-                this.globalPointer=startBound;	
-			
+	public String unloadFromMemory() throws IOException {
+		String pushDisk = "";
+		int startBound = 0;
+		if (!this.memory.getMemory()[state_offset].equals(processStatus.Running))
+			startBound = 0;
+		else
+			startBound = 20;
+		inMem.remove(Integer.parseInt(this.memory.getMemory()[startBound] + ""));
+		System.out.println("************ Process " + this.memory.getMemory()[startBound + id_offset]
+				+ " is swaped from  Memory ************");
+		for (int i = startBound; i <= startBound + 19 && this.memory.getMemory()[i] != null; i++) {
+			if (i >= startBound + inst_offset) {
+				@SuppressWarnings("unchecked")
+				Stack<String> y = (Stack<String>) this.memory.getMemory()[i];
+				pushDisk += printStack(y);
+			} else {
+				if (i == startBound + state_offset) {
+					if (this.memory.getMemory()[i].equals(processStatus.READY))
+						pushDisk += "STATUS IS READY" + "\n";
+					else
+						pushDisk += "STATUS IS BLOCKED" + "\n";
+				} else
+					pushDisk += this.memory.getMemory()[i] + "\n";
+			}
 
-	   return pushDisk;
+			this.memory.getMemory()[i] = null;
+		}
+		this.globalPointer = startBound;
+
+		return pushDisk;
 
 	}
 
 	public void unloadFinished(process p) throws IOException {
-		int startBound=0;
-		if (this.memory.getMemory()[id_offset]!=null&&p.getPid()==Integer.parseInt(this.memory.getMemory()[id_offset]+"")) startBound=0;
-		else startBound=20;
-		inMem.remove(Integer.parseInt(this.memory.getMemory()[startBound]+""));
-		for (int i = startBound; i <=startBound+19; i++) {
+		int startBound = 0;
+		if (this.memory.getMemory()[id_offset] != null
+				&& p.getPid() == Integer.parseInt(this.memory.getMemory()[id_offset] + ""))
+			startBound = 0;
+		else
+			startBound = 20;
+		inMem.remove(Integer.parseInt(this.memory.getMemory()[startBound] + ""));
+		for (int i = startBound; i <= startBound + 19; i++) {
 			this.memory.getMemory()[i] = null;
 		}
-		this.globalPointer=startBound;
+		this.globalPointer = startBound;
 	}
+
 	public int getPos(process p) {
-		
-		if (this.memory.getMemory()[id_offset]!=null&&p.getPid()==Integer.parseInt(this.memory.getMemory()[id_offset]+"")) return 0;
-		else return 20;
-		
+
+		if (this.memory.getMemory()[id_offset] != null
+				&& p.getPid() == Integer.parseInt(this.memory.getMemory()[id_offset] + ""))
+			return 0;
+		else
+			return 20;
+
 	}
+
 	public static String printStack(Stack<String> x) {
 		String temp = "";
 		while (!x.isEmpty()) {
