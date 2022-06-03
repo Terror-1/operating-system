@@ -52,7 +52,7 @@ The job of code parser is from it is name  just parse the textfile (unparsed) in
 ## Second phase
 In the first phase of this project we implemented the Memory of the OS and the Swaping algorithm :
 - [Memory](##Memory)
-- [Swaping Algorithm](#Swaping Algorithm)
+- [Swaping Algorithm](#Swaping-Algorithm)
 - [Disk](#Disk)
 - [PCB](#PCB)
 - [Process state](#Process-state)
