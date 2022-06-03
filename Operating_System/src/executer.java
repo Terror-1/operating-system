@@ -2,9 +2,9 @@ import java.io.IOException;
 import java.util.Queue;
 
 public class executer {
-	systemCalls systemCalls;
-	mutexes mutex;
-	memory memory;
+	private systemCalls systemCalls;
+	private mutexes mutex;
+	private memory memory;
 
 	public executer(Queue<process> blockedQueue, Queue<process> readyQueue, memory memory) {
 		this.mutex = new mutexes(blockedQueue, readyQueue, memory);
@@ -49,7 +49,7 @@ public class executer {
 
 		case "printFromTo": {
 			System.out.println("process " + p.getPid() + " is printing from " + arg2 + " to " + arg3);
-			systemCalls.printFromTo(arg2, arg3, varIdx, memory);
+			this.printFromTo(arg2, arg3, varIdx, memory);
 			break;
 		}
 		default:
@@ -66,6 +66,28 @@ public class executer {
 	public String callTakeInput() {
 		return systemCalls.takeInput();
 	}
+	public void printFromTo(String x, String y, int varIdx, memory memory) {
+		memory.print();
+		int firstNumber;
+		int secondNumber;
+		if (systemCalls.contains(varIdx, x, memory))
+			firstNumber = Integer.parseInt(systemCalls.readFromMemoryNum(varIdx, x, memory));
+		else
+			firstNumber = Integer.parseInt(x);
+		if (systemCalls.contains(varIdx, y, memory))
+			secondNumber = Integer.parseInt(systemCalls.readFromMemoryNum(varIdx, y, memory));
+		else
+			secondNumber = Integer.parseInt(y);
+
+		if (firstNumber < secondNumber)
+			swap(firstNumber, secondNumber);
+
+		System.out.print("values between " + firstNumber + " and " + secondNumber + " >>> ");
+		for (int i = firstNumber + 1; i < secondNumber; i++) {
+			System.out.print(i + " ");
+		}
+		System.out.println();
+	}
 
 	public void assign(String arg1, String arg2, int varIdx, process p) {
 		if (this.systemCalls.contains(varIdx, arg2, memory)) {
@@ -79,9 +101,14 @@ public class executer {
 			Pair temPair = new Pair(arg1, arg2);
 			systemCalls.writeToMemory(temPair, p.getSpot() + varIdx, memory);
 			p.setSpot(p.getSpot() + 1);
-			this.memory.print();
 			System.out.println("assigned " + arg2 + " to variable " + arg1 + " succesfully");
 		}
+		this.memory.getMemory()[varIdx+2]="Variable name is Empty value in Null";
+	}
+	public static void swap(int x, int y) {
+		int temp = x;
+		x = y;
+		y = temp;
 	}
 
 }

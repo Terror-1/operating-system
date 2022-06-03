@@ -141,29 +141,6 @@ public class systemCalls {
 		file.createNewFile();
 	}
 
-	public void printFromTo(String x, String y, int varIdx, memory memory) {
-		memory.print();
-		int firstNumber;
-		int secondNumber;
-		if (this.contains(varIdx, x, memory))
-			firstNumber = Integer.parseInt(readFromMemoryNum(varIdx, x, memory));
-		else
-			firstNumber = Integer.parseInt(x);
-		if (this.contains(varIdx, y, memory))
-			secondNumber = Integer.parseInt(readFromMemoryNum(varIdx, y, memory));
-		else
-			secondNumber = Integer.parseInt(y);
-
-		if (firstNumber < secondNumber)
-			swap(firstNumber, secondNumber);
-
-		System.out.print("values between " + firstNumber + " and " + secondNumber + " >>> ");
-		for (int i = firstNumber + 1; i < secondNumber; i++) {
-			System.out.print(i + " ");
-		}
-		System.out.println();
-	}
-
 	public void writeToMemory(Pair arg, int varIdx, memory memory) {
 		memory.getMemory()[varIdx] = arg;
 	}
@@ -172,11 +149,5 @@ public class systemCalls {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Please enter a value");
 		return sc.nextLine();
-	}
-
-	public static void swap(int x, int y) {
-		int temp = x;
-		x = y;
-		y = temp;
 	}
 }

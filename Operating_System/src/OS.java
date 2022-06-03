@@ -2,11 +2,10 @@ import java.io.*;
 import java.util.*;
 
 public class OS {
-	Queue<process> readyQueue;
-	Queue<process> blockedQueue;
-	process[] processesInMem;
-	codeParser parser;
-	executer executer;
+	private Queue<process> readyQueue;
+	private Queue<process> blockedQueue;
+	private codeParser parser;
+	private executer executer;
 	private int Counter;
 	private Hashtable<Integer, String> programs; // integer >> time of arrival -- string >> program src
 	private Set<String> ourInstruction = new HashSet<String>();
@@ -15,21 +14,19 @@ public class OS {
 	private int totaNumOfProcesses = 3;
 	private int numOfFinshed = 0;
 	private Set<Integer> inMem = new HashSet<Integer>();
-	memory memory;
-	systemCalls tempCalls;
+	private memory memory;
+	private systemCalls tempCalls;
 	private int globalPointer = 0;
 	private boolean EmptyDisk = false;
-	private final int id_offset = 0, pc_offset = 2, state_offset = 1, mem_bound_offset = 3, var_offset = 4,
-			inst_offset = 7;
+	private final int id_offset = 0, pc_offset = 2, state_offset = 1, start_mem_bound_offset = 3,
+			end_mem_bound_offset = 4, var_offset = 5, inst_offset = 8;
 
 	public OS() {
-
 		this.parser = new codeParser();
 		this.programs = new Hashtable<>();
 		this.Counter = 1;
 		this.readyQueue = new LinkedList<>();
 		this.blockedQueue = new LinkedList<>();
-		this.processesInMem = new process[2];
 		this.memory = new memory();
 		this.executer = new executer(blockedQueue, readyQueue, memory);
 		this.tempCalls = new systemCalls();
@@ -42,12 +39,11 @@ public class OS {
 		this.ourInstruction.add("semSignal");
 		this.ourInstruction.add("readFile");
 		this.ourInstruction.add("WriteFile");
-
 	}
 
 	public void partions(String program, int id) throws IOException {
 		PCB pcb = new PCB(id, processStatus.READY);
-		process p = new process(id, this.clk, pcb);
+		process p = new process(id, pcb);
 		int startBound = 0;
 		int endBound = 0;
 		// check for place to insert in
@@ -89,8 +85,9 @@ public class OS {
 		memory.getMemory()[StartBound] = pcb.getId();
 		memory.getMemory()[StartBound + state_offset] = processStatus.READY;
 		memory.getMemory()[StartBound + pc_offset] = pcb.getPc();
-		memory.getMemory()[StartBound + mem_bound_offset] = "Start Bound is " + pcb.getStartBound() + " End Bound is "
-				+ pcb.getEndBound();
+		memory.getMemory()[StartBound + start_mem_bound_offset] = "Start Bound is " + pcb.getStartBound();
+		memory.getMemory()[StartBound + end_mem_bound_offset] = "End Bound is " + pcb.getEndBound();
+
 		memory.getMemory()[StartBound + var_offset] = new Pair("Empty", "Null");
 		memory.getMemory()[StartBound + var_offset + 1] = new Pair("Empty", "Null");
 		memory.getMemory()[StartBound + var_offset + 2] = new Pair("Empty", "Null");
@@ -117,42 +114,73 @@ public class OS {
 					swap();
 				System.out.println("process " + temp.getPid() + " is chosen from readyQueue by the scheduler  ");
 				int pos = this.getPos(temp);
-				temp.pcb.setState(processStatus.Running);
+				temp.getPcb().setState(processStatus.Running);
 				this.memory.getMemory()[pos + state_offset] = processStatus.Running;
 				int pc = 0;
-				for (int i = 0; (i < timeSlice) && (!temp.pcb.getState().equals(processStatus.FINISHED))
-						&& (!temp.pcb.getState().equals(processStatus.BLOCKED)); i++) {
+				for (int i = 0; (i < timeSlice) && (!temp.getPcb().getState().equals(processStatus.FINISHED))
+						&& (!temp.getPcb().getState().equals(processStatus.BLOCKED)); i++) {
 					System.out.println("process " + temp.getPid() + " is currently executing");
 					pc = Integer.parseInt(this.memory.getMemory()[pos + pc_offset] + "");
 					checkArrival();
 					Stack<String> current = (Stack<String>) (this.memory.getMemory()[pc + inst_offset + pos]);
+					Stack<String> currinsta = (Stack<String>) current.clone();
 					String temp1 = current.pop();
-					if (temp1.equals("input")) {
+					if (temp1.equals("input") && temp.isCheckFlag()) {
 						System.out.println("Process " + temp.getPid() + " is taking input ");
-						current.push(executer.callTakeInput());
+						this.memory.getMemory()[pos + var_offset + 2] = "Variable name is temperory value is "
+								+ executer.callTakeInput();
+						temp.setCheckFlag(false);
+						this.memory.getMemory()[pc + inst_offset + pos] = currinsta;
 					} else {
 						if (this.ourInstruction.contains(current.peek())) {
 							String temp2 = current.pop();
-							if (temp2.equals("readFile")) {
+							if (temp2.equals("readFile") && temp.isCheckFlag()) {
 								if (!current.peek().isEmpty())
-									current.push(
-											executer.executeSpecialInstruction(temp2, temp1, temp, pos + var_offset));
+									this.memory.getMemory()[pos + var_offset
+											+ 2] = "Variable name is temperory value is "
+													+ executer.executeSpecialInstruction(temp2, temp1, temp,
+															pos + var_offset);
+								this.memory.getMemory()[pc + inst_offset + pos] = currinsta;
+								temp.setCheckFlag(false);
 							}
 
-							else {
+							else if (!temp2.equals("readFile")) {
 								executer.executeInstruction2(temp2, temp1, temp, pos + var_offset);
 								if (current.isEmpty()) {
+									this.memory.getMemory()[pc + inst_offset + pos] = currinsta;
+									pc++;
+									temp.getPcb().setPc(pc);
+									this.memory.getMemory()[pos + pc_offset] = pc;
+									temp.setCheckFlag(true);
+								}
+
+							}
+							else {
+								temp1= this.tempCalls.readFromMemoryStr(pos + var_offset + 2, "temperory", memory);
+								String local = current.pop();
+								String local2 = current.pop();
+								executer.executeInstruction3(local2, local, temp1, temp, pos + var_offset);
+								if (current.isEmpty()) {
+									temp.setCheckFlag(true);
+									this.memory.getMemory()[pc + inst_offset + pos] = currinsta;
 									pc++;
 									temp.getPcb().setPc(pc);
 									this.memory.getMemory()[pos + pc_offset] = pc;
 								}
 
+								
+								
 							}
 						} else {
 							String temp2 = current.pop();
 							String temp3 = current.pop();
+							if (temp3.equals("assign")) {
+								temp1 = this.tempCalls.readFromMemoryStr(pos + var_offset + 2, "temperory", memory);
+							}
 							executer.executeInstruction3(temp3, temp2, temp1, temp, pos + var_offset);
 							if (current.isEmpty()) {
+								temp.setCheckFlag(true);
+								this.memory.getMemory()[pc + inst_offset + pos] = currinsta;
 								pc++;
 								temp.getPcb().setPc(pc);
 								this.memory.getMemory()[pos + pc_offset] = pc;
@@ -177,8 +205,8 @@ public class OS {
 					System.out.println("blocedQueue > " + this.blockedQueue);
 					this.memory.print();
 					System.out.println("*** Clock Time is " + (clk - 1) + " ***");
-				
-					System.out.println("--------------------------------------------------------");
+
+					System.out.println("----------------------------------------------------------------------------------------------------");
 
 				}
 				if (!temp.getPcb().getState().equals(processStatus.BLOCKED) && !(pc == Integer.MAX_VALUE)) {
@@ -195,7 +223,7 @@ public class OS {
 				System.out.println("readyQueue > " + this.readyQueue);
 				System.out.println("blocedQueue > " + this.blockedQueue);
 				System.out.println("*** Clock Time is " + (clk - 1) + " ***");
-				System.out.println("--------------------------------------------------------");
+				System.out.println("----------------------------------------------------------------------------------------------------");
 
 			}
 		}
@@ -228,7 +256,8 @@ public class OS {
 		int endBound = loadPos + 19;
 		if (!EmptyDisk) {
 			this.parser.parseInputString("src/Disk.txt", loadPos, memory);
-			this.memory.getMemory()[loadPos + 3] = "Start Bound is " + loadPos + " End Bound is " + endBound;
+			this.memory.getMemory()[loadPos + 3] = "Start Bound is " + loadPos;
+			this.memory.getMemory()[loadPos + 4] = " End Bound is " + endBound;
 			inMem.add(Integer.parseInt(this.memory.getMemory()[loadPos] + ""));
 
 			System.out.println("************ Process " + Integer.parseInt(this.memory.getMemory()[loadPos] + "")

@@ -10,7 +10,7 @@ public class codeParser {
 		String st;
 		//////////////////////// should be removed//////////////////////
 
-		int counter = pcb.getStartBound() + 7;
+		int counter = pcb.getStartBound() + 8;
 		while (sc.hasNext()) {
 			Stack<String> temp = new Stack<>();
 			st = sc.nextLine();
@@ -32,7 +32,7 @@ public class codeParser {
 		String st;
 		int counter = loadPos;
 		while (sc.hasNext()) {
-			if (counter > loadPos + 6) {
+			if (counter > loadPos + 7) {
 				Stack<String> temp = new Stack<>();
 				st = sc.nextLine();
 				String stringBuilder[] = st.split(" ");

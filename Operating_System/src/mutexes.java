@@ -8,9 +8,9 @@ public class mutexes {
 	private boolean userOutput;
 	private boolean file;
 	private int currentOwner[];
-	Queue<process> generalBlocked;
-	Queue<process> RQ;
-	memory memory;
+	private Queue<process> generalBlocked;
+	private Queue<process> RQ;
+	private memory memory;
 
 	public mutexes(Queue<process> blockedQueue, Queue<process> readyQueue, memory memory) {
 		this.blockedOfFile = new LinkedList<>();
@@ -19,7 +19,7 @@ public class mutexes {
 		this.userInput = true;
 		this.userOutput = true;
 		this.file = true;
-		currentOwner = new int[3];
+		this.currentOwner = new int[3];
 		this.RQ = readyQueue;
 		// 0 --> process running over userInput
 		// 1 --> process running over userOutput

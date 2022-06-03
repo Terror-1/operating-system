@@ -1,17 +1,20 @@
 public class process {
 	private int pid;
-	private int timeOfArrival;
-	private boolean addedFlag=false;
-	private int instCount;
 	private int spot;
-	PCB pcb;
+	private boolean checkFlag;
+	private PCB pcb;
 	
-	
-	public process(int pid ,int timeOfArival,PCB pcb) {
-		this.spot=4;
+	public process(int pid ,PCB pcb) {
+		this.spot=0;
 		this.pid=pid;
 		this.pcb =pcb;
-		this.timeOfArrival=timeOfArival;
+		this.checkFlag=true;
+	}
+	public boolean isCheckFlag() {
+		return checkFlag;
+	}
+	public void setCheckFlag(boolean checkFlag) {
+		this.checkFlag = checkFlag;
 	}
 	public int getSpot() {
 		return spot;
@@ -28,23 +31,4 @@ public class process {
 	public PCB getPcb() {
 		return pcb;
 	}
-	public boolean getaddedFlag() {
-		return addedFlag;
-	}
-	public void setaddedFlag(boolean x) {
-		this.addedFlag = x;
-	}
-	public int getTimeOfArrival() {
-		return timeOfArrival;
-	}
-	public void setTimeOfArrival(int timeOfArrival) {
-		this.timeOfArrival = timeOfArrival;
-	}
-	public int getInstCount() {
-		return instCount;
-	}
-	public void setInstCount(int instCount) {
-		this.instCount = instCount;
-	}
-	
 }
