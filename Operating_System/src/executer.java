@@ -94,16 +94,18 @@ public class executer {
 			arg2 = systemCalls.readFromMemoryStr(varIdx, arg1, memory);
 			Pair temPair = new Pair(arg1, arg2);
 			systemCalls.writeToMemory(temPair, p.getSpot() + varIdx, memory);
+			if ((p.getSpot()+varIdx)!=(varIdx+2))this.memory.getMemory()[varIdx+2]="Variable name is Empty value in Null";
 			p.setSpot(p.getSpot() + 1);
 			System.out.println("assigned " + arg2 + " to variable " + arg1 + " succesfully");
 
 		} else {
 			Pair temPair = new Pair(arg1, arg2);
 			systemCalls.writeToMemory(temPair, p.getSpot() + varIdx, memory);
+			if ((p.getSpot()+varIdx)!=(varIdx+2))this.memory.getMemory()[varIdx+2]="Variable name is Empty value in Null";
 			p.setSpot(p.getSpot() + 1);
 			System.out.println("assigned " + arg2 + " to variable " + arg1 + " succesfully");
 		}
-		this.memory.getMemory()[varIdx+2]="Variable name is Empty value in Null";
+		
 	}
 	public static void swap(int x, int y) {
 		int temp = x;

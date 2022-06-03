@@ -1,1 +1,15 @@
-EMPTY
+1
+STATUS IS READY
+4
+Start Bound is 0
+End Bound is 19
+Variable name is a value is 5 
+Variable name is b value is 9 
+Variable name is Empty value in Null
+semWait userInput 
+assign a input 
+assign b input 
+semSignal userInput 
+semWait userOutput 
+printFromTo a b 
+semSignal userOutput 

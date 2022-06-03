@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class memory {
 	private final int memorySize = 40;
 	private Object[] memory;
