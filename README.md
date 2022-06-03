@@ -2,8 +2,8 @@
 
 ## Table of content
 - [Project Description](#project-description)
-- [First phase](#First-section)
-- [Second phase](#First-section)
+- [First phase](#First-phase)
+- [Second phase](#Second-phase)
 
 
 
