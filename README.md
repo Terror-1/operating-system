@@ -33,7 +33,7 @@ In the first phase of this project we simulate the OS by building the main compo
 - [Blocked Queue](#First-section)
 - [Mutex](#First-section)
 - [System Calls](#First-section)
-- [Code Parser]
+- [Code Parser](#Code_Parser)
  
 ### Scheduler 
 we implemented the scheduler with the round robin algorithm where we assign each process a fixed quantum to run and when it finishs its quantum it return back to the ready queue waiting for its time slice and keep rounding untill all the process are finished .
@@ -45,4 +45,4 @@ In the first phase of this project we implemented the Memory of the OS and the S
 - [Disk](#First-section)
 - [Process](#First-section)
 - [PCB](#First-section)
-- [Process state]
+- [Process state](#Process-state)
