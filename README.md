@@ -13,13 +13,13 @@
 Operating Systems (CSEN 602), spring 2022
 
 ### Theme
-The theme of the project, is to understand the concepts of an Operating System  by building
-a processor and then to experiment with it to see how the OS manages
-resources and processes. In this project, you are building simulation of
-an operating system.
+The theme of the project, is to understand the concepts of the Operating System  by building
+a processor and then experiment it to see how the OS manages
+resources and processes.
 
 ### Overview 
-This project is divided to section , First section is to build an interpreter to translate a text file and call the scheduler to schedule the programs in the text file to the  >>>> CPU
+This project is divided to section , First section is to build an interpreter to translate a text file and call the scheduler to schedule the programs in the text file to the  >>>> CPU .
+second section to implement the memory that stores processes' data .
 
 ### Objectives
 - understand the concept of OS
