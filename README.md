@@ -44,9 +44,11 @@ The ready Queue is a pool of process that are waiting to take their quantum.
 The blocked queue conatins a pool of process that are waiting for an event to occur.
 ### Mutex
 We implemnted three types of mutex (Mutex over the input , Mutex over the output , Mutex over the File):
-when a process need to use one of thoose resources it call a method ``` SemWait ```
+when a process need to use one of thoose resources it calls a method ``` SemWait ``` if the resource is available it will take it else it will be bloced over this resource untill the process holding this resource signal it with a the method ``` SemSignal ```
 ### System Calls
+In the component of the processor we created the methods that access pieces of Hardware Like ``` readFile ``` ``` writeFile ``` ``` print ```
 ### Code Parser
+The job of code parser is from it is name  just parse the textfile (unparsed) into a format of parsed line of code that we can execute.
 ## Second phase
 In the first phase of this project we implemented the Memory of the OS and the Swaping algorithm :
 - [Memory](##Scheduler)
