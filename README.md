@@ -29,18 +29,22 @@ second section to implement the memory that stores processes' data .
 ## First phase
 In the first phase of this project we simulate the OS by building the main component of The CPU :
 - [Scheduler](##Scheduler)
-- [Ready Queue](#First-section)
-- [Blocked Queue](#First-section)
-- [Mutex](#First-section)
-- [System Calls](#First-section)
-- [Code Parser](#Code_Parser)
+- [Ready Queue](#Ready-Queue)
+- [Blocked Queue](#Blocked-Queue)
+- [Mutex](#Mutex)
+- [System Calls](#System-Calls)
+- [Code Parser](#Code-Parser)
  
 ### Scheduler 
 we implemented the scheduler with the round robin algorithm where we assign each process a fixed quantum to run and when it finishs its quantum it return back to the ready queue waiting for its time slice and keep rounding untill all the process are finished .
-    you can read more about round robin algorithm from here : https://www.techtarget.com/whatis/definition/round-robin#:~:text=A%20round%2Drobin%20story%20is,ended%20depend%20on%20the%20rules.
+    you can read more about round robin algorithm from here : https://www.techtarget.com/whatis/definition/round-robin#:~:text=A%20round%2Drobin%20story%20is,ended%20depend%20on%20the%20rules.    
 ### Ready Queue
-### Blocked Queue 
+The ready Queue is a pool of process that are waiting to take their quantum.
+### Blocked Queue
+The blocked queue conatins a pool of process that are waiting for an event to occur.
 ### Mutex
+We implemnted three types of mutex (Mutex over the input , Mutex over the output , Mutex over the File):
+when a process need to use one of thoose resources it call a method ``` SemWait ```
 ### System Calls
 ### Code Parser
 ## Second phase
