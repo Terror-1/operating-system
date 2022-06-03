@@ -51,9 +51,25 @@ In the component of the processor we created the methods that access pieces of H
 The job of code parser is from it is name  just parse the textfile (unparsed) into a format of parsed line of code that we can execute.
 ## Second phase
 In the first phase of this project we implemented the Memory of the OS and the Swaping algorithm :
-- [Memory](##Scheduler)
-- [Swaping Algorithm](#First-section)
-- [Disk](#First-section)
-- [Process](#First-section)
-- [PCB](#First-section)
+- [Memory](##Memory)
+- [Swaping Algorithm](#Swaping Algorithm)
+- [Disk](#Disk)
+- [PCB](#PCB)
 - [Process state](#Process-state)
+### Memory 
+Our memory is this project is a generic one holds both instruction and data in the Von_neuman architecture .
+Our memory can hold up to 40 words . we use the Fixed-partioning method where the memory can hold 2 processes each of them is a fixed size of 20 meaning 
+the First segmant of the memory contains 20 words distributed among process's component 
+### Swaping Algorithm 
+For the simplicity , we know that the memory holds 2 process only , so definitely on of them is running in the CPU and the other is either ready or blocked , so when a new process arrives and the memory is full we swap the non-running one to Disk and put the one which arrives it it place .
+### Disk 
+We simulate the Disk with a text file that contains unparsed line of code .
+## PCB 
+The pcb consists of four main elements : 
+- process Id
+- program Counter
+- process state
+- Memory boundries (start , end)
+## Process state 
+we have 4 main process states >> ```Ready``` ```BLOCKED``` ```RUNNING``` ```FINISHED``` . 
+and we implemented that using an enum .
