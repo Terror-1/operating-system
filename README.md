@@ -39,3 +39,10 @@ In the first phase of this project we simulate the OS by building the main compo
 we implemented the scheduler with the round robin algorithm where we assign each process a fixed quantum to run and when it finishs its quantum it return back to the ready queue waiting for its time slice and keep rounding untill all the process are finished .
     you can read more about round robin algorithm from here : https://www.techtarget.com/whatis/definition/round-robin#:~:text=A%20round%2Drobin%20story%20is,ended%20depend%20on%20the%20rules.
 ## Second phase
+In the first phase of this project we implemented the Memory of the OS and the Swaping algorithm :
+- [Memory](##Scheduler)
+- [Swaping Algorithm](#First-section)
+- [Disk](#First-section)
+- [Process](#First-section)
+- [PCB](#First-section)
+- [Process state]
