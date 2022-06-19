@@ -3,7 +3,7 @@
 ## Table of content
 - [Project Description](#project-description)
 - [First phase](#First-phase)
-- [Second phase](#Second-phase)
+- [Second phase](#Second-phase).
 
 
 
